@@ -1,0 +1,126 @@
+{
+  "entities": {
+    "usuario": {
+      "title": "Usuario",
+      "description": "Información del perfil del usuario",
+      "type": "object",
+      "properties": {
+        "nombre": { "type": "string" },
+        "correo": { "type": "string" },
+        "rol": { "type": "string", "enum": ["usuario", "admin"] },
+        "avatar": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nombre", "correo", "rol"]
+    },
+    "categoria": {
+      "title": "Categoría",
+      "description": "Categorías de lugares turísticos",
+      "type": "object",
+      "properties": {
+        "nombre": { "type": "string" },
+        "color": { "type": "string" },
+        "icono": { "type": "string" }
+      },
+      "required": ["nombre", "color"]
+    },
+    "lugar": {
+      "title": "Lugar",
+      "description": "Lugares turísticos o comerciales",
+      "type": "object",
+      "properties": {
+        "nombre": { "type": "string" },
+        "descripcion": { "type": "string" },
+        "direccion": { "type": "string" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "categoriaId": { "type": "string" },
+        "puntuacion": { "type": "number" },
+        "numReseñas": { "type": "number" },
+        "destacado": { "type": "boolean" },
+        "propietarioId": { "type": "string" },
+        "imagen": { "type": "string" },
+        "imagenes": { "type": "array" },
+        "anuncioActivo": { "type": "boolean" },
+        "anuncioImagen": { "type": "string" },
+        "anuncioDuracion": { "type": "string", "enum": ["1d", "2d", "5d", "15d", "1m"] },
+        "anuncioHasta": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nombre", "direccion", "categoriaId", "propietarioId"]
+    },
+    "comentario": {
+      "title": "Comentario",
+      "description": "Reseñas y puntuaciones de los lugares",
+      "type": "object",
+      "properties": {
+        "usuarioId": { "type": "string" },
+        "usuarioNombre": { "type": "string" },
+        "lugarId": { "type": "string" },
+        "puntuacion": { "type": "number" },
+        "texto": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["usuarioId", "lugarId", "puntuacion"]
+    },
+    "reporte": {
+      "title": "Reporte",
+      "description": "Reporte de eventos de tráfico en tiempo real tipo Waze",
+      "type": "object",
+      "properties": {
+        "tipo": { "type": "string", "enum": ["trafico", "policia", "derrumbe", "semaforo", "desvio", "accidente"] },
+        "descripcion": { "type": "string" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "creadorId": { "type": "string" },
+        "creadorNombre": { "type": "string" },
+        "likes": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["tipo", "lat", "lng", "creadorId"]
+    },
+    "historia": {
+      "title": "Historia",
+      "description": "Estados tipo WhatsApp que duran 24 horas",
+      "type": "object",
+      "properties": {
+        "usuarioId": { "type": "string" },
+        "usuarioNombre": { "type": "string" },
+        "usuarioAvatar": { "type": "string" },
+        "imagen": { "type": "string" },
+        "texto": { "type": "string" },
+        "background": { "type": "string" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["usuarioId", "usuarioNombre", "expiresAt"]
+    }
+  },
+  "firestore": {
+    "/usuarios/{userId}": {
+      "schema": "usuario",
+      "description": "Perfiles de usuario"
+    },
+    "/categorias/{categoriaId}": {
+      "schema": "categoria",
+      "description": "Categorías de lugares"
+    },
+    "/lugares/{lugarId}": {
+      "schema": "lugar",
+      "description": "Lugares turísticos y comerciales"
+    },
+    "/lugares/{lugarId}/comentarios/{comentarioId}": {
+      "schema": "comentario",
+      "description": "Comentarios de un lugar específico"
+    },
+    "/reportes/{reporteId}": {
+      "schema": "reporte",
+      "description": "Reportes de tráfico y eventos en tiempo real"
+    },
+    "/historias/{storyId}": {
+      "schema": "historia",
+      "description": "Estados/historias tipo WhatsApp de 24 horas"
+    }
+  }
+}

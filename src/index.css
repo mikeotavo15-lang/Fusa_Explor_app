@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@400;500;700&family=Comic+Neue:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Comic Neue", cursive, sans-serif;
+  --font-comic: "Bangers", cursive;
+  --font-text-comic: "Comic Neue", cursive, sans-serif;
+  --color-primary: #8a2be2; 
+  --color-secondary: #d8b4fe; 
+  --color-accent: #f8f9fa; 
+}
+
+body {
+  @apply bg-[#d8b4fe] text-slate-900 overflow-x-hidden font-bold;
+  font-family: var(--font-sans);
+}
+
+body, input, select, textarea, button, span, p, div, a {
+  font-weight: 700 !important;
+}
+
+.font-comic {
+  font-family: var(--font-comic) !important;
+  font-weight: 400 !important; /* Bangers display font looks best at native weight */
+}
+
+.halftone-bg {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.1) 20%, transparent 20%), radial-gradient(circle, rgba(0,0,0,0.1) 20%, transparent 20%);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
+
+.halftone-bg-dark {
+  background-image: radial-gradient(circle, rgba(244,63,94,0.15) 20%, transparent 20%), radial-gradient(circle, rgba(244,63,94,0.15) 20%, transparent 20%);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
+
+.comic-border {
+  border: 4px solid black;
+  box-shadow: 6px 6px 0px rgba(0,0,0,1);
+}
+
+.comic-card {
+  border: 4px solid black;
+  box-shadow: 6px 6px 0px rgba(0,0,0,1);
+  @apply bg-white rounded-3xl transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_rgba(0,0,0,1)];
+}
+
+.comic-card-dark {
+  border: 4px solid black;
+  box-shadow: 6px 6px 0px rgba(236,72,153,1);
+  @apply bg-[#221c32] rounded-3xl transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_rgba(236,72,153,1)];
+}
+
+.comic-button {
+  border: 4px solid black;
+  box-shadow: 5px 5px 0px rgba(0,0,0,1);
+  @apply bg-white text-black font-black uppercase active:translate-y-1 active:translate-x-1 active:shadow-none transition-all cursor-pointer;
+}
+
+.comic-button-pink {
+  border: 4px solid black;
+  box-shadow: 5px 5px 0px rgba(0,0,0,1);
+  @apply bg-pink-500 text-white font-black uppercase hover:bg-pink-400 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all cursor-pointer;
+}
+
+.comic-button-yellow {
+  border: 4px solid black;
+  box-shadow: 5px 5px 0px rgba(0,0,0,1);
+  @apply bg-[#c084fc] text-black font-black uppercase hover:bg-[#d8b4fe] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all cursor-pointer;
+}
+
+.comic-badge {
+  border: 3px solid black;
+  box-shadow: 3px 3px 0px rgba(0,0,0,1);
+  @apply font-black text-xs uppercase tracking-widest px-3 py-1;
+}
+
+.comic-input {
+  border: 4px solid black;
+  @apply bg-white rounded-2xl outline-none font-bold transition-all focus:bg-purple-50 focus:shadow-[4px_4px_0_#000];
+}
+
+.comic-input-dark {
+  border: 4px solid black;
+  @apply bg-[#29233b] text-white rounded-2xl outline-none font-bold transition-all focus:bg-[#332b4a] focus:shadow-[4px_4px_0_rgba(236,72,153,1)];
+}
+
+.comic-speech-bubble {
+  position: relative;
+  border: 4px solid black;
+  @apply bg-white text-black p-4 rounded-3xl shadow-[4px_4px_0px_rgba(0,0,0,1)];
+}
+
+.comic-speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 24px;
+  width: 0;
+  height: 0;
+  border-width: 15px 15px 0 0;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+  display: block;
+}
+
+.comic-speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -21px;
+  left: 21px;
+  width: 0;
+  height: 0;
+  border-width: 18px 18px 0 0;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+  display: block;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Fusa Explor",
+  "description": "Explora y gestiona lugares turísticos en Fusagasugá con una interfaz móvil moderna.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "mobile_optimized",
+    "pwa"
+  ]
+}

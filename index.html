@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fusa Explor</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+   <script>
+  
+  window.addEventListener('error', function(e) {
+    if (e.message && e.message.toLowerCase().includes('websocket')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  window.addEventListener('unhandledrejection', function(e) {
+    if (e.reason && e.reason.toString().toLowerCase().includes('websocket')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+</script>
+
+    <script>
+  
+        window.showAgent = function() {};
+        window.hideAgent = function() {};
+    </script>
+  </body>
+</html>
+

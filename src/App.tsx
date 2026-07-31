@@ -689,7 +689,7 @@ const PlaceDetail = ({
           <ArrowLeft size={20} />
         </button>
         <div className="flex items-center gap-4">
-          {user.rol === 'admin' && (
+          {(user?.rol === 'admin' || user?.correo?.endsWith('@fusaexplor.com') || user?.correo?.endsWith('@fusaexplorer.com') || user?.correo === 'riascosmarlon66@gmail.com' || user?.correo === 'mike.otavo15@gmail.com') && (
             <>
               <button 
                 onClick={(e) => { e.stopPropagation(); onEdit(lugar); }} 
@@ -701,13 +701,16 @@ const PlaceDetail = ({
                 <Pencil size={20} />
               </button>
               <button 
-                onClick={(e) => { e.stopPropagation(); if(confirm('¿Seguro que deseas eliminar este lugar?')) onDelete(lugar.id); }} 
-                className={`p-2 rounded-full text-red-105 transition-colors ${
-                  darkMode ? 'bg-red-950/45 text-red-400 hover:bg-red-900/40 border border-red-500/25' : 'bg-white/20 text-red-100 hover:bg-red-500/30'
-                }`}
-                title="Eliminar"
+                onClick={(e) => { 
+                  e.stopPropagation(); 
+                  if (confirm(`¿Seguro que deseas eliminar el lugar "${lugar.nombre}"?`)) {
+                    onDelete(lugar.id); 
+                  }
+                }} 
+                className={`p-2 rounded-full text-white bg-red-600 hover:bg-red-700 shadow-md transition-all active:scale-95`}
+                title="Eliminar lugar"
               >
-                <X size={20} />
+                <Trash2 size={20} />
               </button>
             </>
           )}
@@ -903,8 +906,7 @@ const InAppBrowser = ({
   darkMode: boolean
 }) => {
   const [useApp, setUseApp] = useState(true);
-  const [browserSpeed, setBrowserSpeed] = useState<number>(0);
-  const [travelMode, setTravelMode] = useState<'d' | 'w' | 'r' | 'b'>('d');
+  const [travelMode, setTravelMode] = useState<'d' | 'w'>('d');
   
   // WhatsApp map style controls
   const [zoom, setZoom] = useState(15);
@@ -916,9 +918,6 @@ const InAppBrowser = ({
   const lat = lugar.lat || 4.3361;
   const lng = lugar.lng || -74.3638;
 
-  // Real device location tracking with historical position speed estimation
-  const lastPositionRef = useRef<{ lat: number, lng: number, timestamp: number } | null>(null);
-
   useEffect(() => {
     if (!navigator.geolocation) return;
     
@@ -926,44 +925,10 @@ const InAppBrowser = ({
       (position) => {
         const currentLat = position.coords.latitude;
         const currentLng = position.coords.longitude;
-        const currentTs = position.timestamp || Date.now();
-        
-        const loc = { lat: currentLat, lng: currentLng };
-        setCurrentDeviceLoc(loc);
-
-        let calculatedSpeed = 0;
-        if (position.coords.speed !== null && position.coords.speed !== undefined && position.coords.speed > 0) {
-          calculatedSpeed = position.coords.speed * 3.6;
-        } else if (lastPositionRef.current) {
-          const prev = lastPositionRef.current;
-          // Haversine formula
-          const R = 6371000;
-          const phi1 = (prev.lat * Math.PI) / 180;
-          const phi2 = (currentLat * Math.PI) / 180;
-          const deltaPhi = ((currentLat - prev.lat) * Math.PI) / 180;
-          const deltaLambda = ((currentLng - prev.lng) * Math.PI) / 180;
-
-          const a =
-            Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
-            Math.cos(phi1) * Math.cos(phi2) * Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          const distance = R * c; // meters
-
-          const timeDiff = (currentTs - prev.timestamp) / 1000; // seconds
-          if (timeDiff > 0.5 && distance > 0.5) {
-            const speedMps = distance / timeDiff;
-            calculatedSpeed = speedMps * 3.6;
-            if (calculatedSpeed > 220) {
-              calculatedSpeed = 0; // Filter gps glitches
-            }
-          }
-        }
-
-        setBrowserSpeed(Math.round(calculatedSpeed));
-        lastPositionRef.current = { lat: currentLat, lng: currentLng, timestamp: currentTs };
+        setCurrentDeviceLoc({ lat: currentLat, lng: currentLng });
       },
       (error) => {
-        console.warn("GPS telemetry error:", error);
+        console.warn("GPS location error:", error);
       },
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
@@ -994,7 +959,7 @@ const InAppBrowser = ({
   const MapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destinationQuery}${
     actualUserLoc ? `&origin=${actualUserLoc.lat},${actualUserLoc.lng}` : ''
   }&travelmode=${
-    travelMode === 'd' ? 'driving' : travelMode === 'w' ? 'walking' : travelMode === 'r' ? 'transit' : 'bicycling'
+    travelMode === 'd' ? 'driving' : 'walking'
   }`;
 
   const handleCenterOnUser = () => {
@@ -1052,18 +1017,16 @@ const InAppBrowser = ({
         <div className={`flex-1 relative ${darkMode ? 'bg-[#181524]' : 'bg-slate-100'}`}>
           {useApp ? (
             <>
-              {/* Transport Mode Options (🚗, 🚶, 🚌, 🚲) on top of map */}
-              <div className="absolute top-4 left-4 right-4 z-[60] flex justify-center gap-2">
+              {/* Transport Mode Options (🚗 Auto, 🚶 Caminar) on top of map */}
+              <div className="absolute top-4 left-4 right-4 z-[60] flex justify-center gap-3">
                 {[
-                  { mode: 'd', label: '🚗' },
-                  { mode: 'w', label: '🚶' },
-                  { mode: 'r', label: '🚌' },
-                  { mode: 'b', label: '🚲' }
+                  { mode: 'd', label: '🚗 Conducir' },
+                  { mode: 'w', label: '🚶 Caminar' }
                 ].map((item) => (
                   <button
                     key={item.mode}
                     onClick={() => setTravelMode(item.mode as any)}
-                    className={`text-xs p-2.5 rounded-full font-bold shadow-md transition-all active:scale-95 ${
+                    className={`text-xs px-4 py-2.5 rounded-full font-extrabold shadow-md transition-all active:scale-95 ${
                       travelMode === item.mode
                         ? (darkMode ? 'bg-pink-600 text-white shadow-pink-600/20' : 'bg-primary text-white shadow-primary/20')
                         : (darkMode ? 'bg-slate-800/90 text-pink-200 hover:bg-slate-700/90' : 'bg-white/90 text-slate-700 hover:bg-white')
@@ -1172,28 +1135,6 @@ const InAppBrowser = ({
                 className="w-full h-full border-none"
                 title="Google Maps Navigation"
               ></iframe>
-              
-              {/* Floating Real Speedometer overlay */}
-              <div className={`absolute bottom-4 left-4 z-[60] p-3 rounded-2xl flex items-center gap-3 shadow-lg border transition-all ${
-                darkMode ? 'bg-slate-950/90 text-white border-pink-500/15' : 'bg-slate-900/90 text-white border-white/10'
-              }`}>
-                <div 
-                  className={`w-11 h-11 rounded-full flex flex-col items-center justify-center border-2 transition-all ${
-                    browserSpeed > 5 
-                      ? 'border-pink-500 bg-pink-950/20 text-pink-400 animate-pulse font-black' 
-                      : 'border-cyan-450 bg-cyan-950/10 text-cyan-300 font-extrabold'
-                  }`}
-                >
-                  <span className="text-xs leading-none">{browserSpeed}</span>
-                  <span className="text-[6.5px] font-bold">KM/H</span>
-                </div>
-                <div>
-                  <p className="text-[9.5px] font-black leading-none uppercase tracking-wide">Velocidad de viaje real</p>
-                  <p className="text-[8px] text-slate-400 mt-1 uppercase font-bold">
-                    {browserSpeed > 0 ? "Moviéndose por GPS" : "Estacionario (GPS activo)"}
-                  </p>
-                </div>
-              </div>
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full p-8 text-center">
@@ -2748,11 +2689,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
   }, [loading]);
 
   const openInGoogleMaps = (lugar: Lugar) => {
-    const destination = encodeURIComponent(
-      `${lugar.nombre}${lugar.direccion ? `, ${lugar.direccion}` : ''}, Fusagasugá, Cundinamarca, Colombia`
-    );
-    const originParam = userLocation ? `&origin=${userLocation.lat},${userLocation.lng}` : '';
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${destination}${originParam}&travelmode=driving`, '_blank');
+    setNavigatingLugar(lugar);
   };
 
   const handleLogout = () => signOut(auth);
@@ -3027,119 +2964,211 @@ const DashboardView = ({ user }: { user: Usuario }) => {
           </div>
         )}
 
-        {currentView === 'estados' && (
-          <div className="p-4 flex flex-col h-full relative">
-            <h2 className="text-4xl font-comic text-black mb-6 drop-shadow-[2px_2px_0_#fff]">ESTADOS</h2>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pb-20">
-               {/* My status card */}
-               <div 
-                 onClick={() => setShowCreateStoryModal(true)}
-                 className="border-[4px] border-black bg-white relative overflow-hidden cursor-pointer shadow-[4px_4px_0_rgba(0,0,0,1)] aspect-[3/4] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all group"
-               >
-                 <div className="w-full h-full bg-cyan-100 flex flex-col items-center justify-center relative p-4">
-                   {/* Comic Speech Bubble */}
-                   <div className="absolute top-4 left-4 w-12 h-12 bg-white border-2 border-black rounded-[50%] flex items-center justify-center z-20 group-hover:scale-110 transition-transform">
-                      <span className="text-black text-xl font-black tracking-tighter leading-none mt-1">...</span>
-                      <div className="absolute -bottom-1.5 right-1.5 w-3 h-3 bg-white border-b-2 border-r-2 border-black transform rotate-45"></div>
-                   </div>
-                   
-                   {user.avatar ? (
-                     <img src={user.avatar} alt="Mi perfil" className="w-16 h-16 rounded-full border-[3px] border-black object-cover filter contrast-125 saturate-150 grayscale-[10%] relative z-10 shadow-[2px_2px_0_#000] mb-2" />
-                   ) : (
-                     <div className="w-16 h-16 rounded-full border-[3px] border-black bg-white flex items-center justify-center text-black font-comic text-3xl shadow-[2px_2px_0_#000] relative z-10 mb-2">
-                       {(user.nombre || 'E').charAt(0).toUpperCase()}
-                     </div>
-                   )}
-                   <div className="text-center relative z-10">
-                     <span className="bg-[#c084fc] border-[2px] border-black px-2 py-1 text-black font-black text-xs shadow-[2px_2px_0_#000] block mt-2">MI ESTADO</span>
-                   </div>
-                   <div className="absolute inset-0 halftone-bg opacity-20 mix-blend-multiply pointer-events-none"></div>
-                 </div>
-               </div>
+        {currentView === 'estados' && (() => {
+          const myUserStories = (historias || []).filter(h => h.usuarioId === user.id);
+          const otherUsersGrouped = storiesGroupedByUser.filter(g => g.userId !== user.id);
+          const latestMyStory = myUserStories.length > 0 ? myUserStories[myUserStories.length - 1] : null;
 
-               {/* Other users status cards */}
-               {storiesGroupedByUser.map((group, groupIdx) => {
-                 const latestStory = group.stories[group.stories.length - 1];
-                 const isOwner = group.userId === user.id;
-                 const isAdminUser = user.rol === 'admin' || user.correo?.endsWith('@fusaexplor.com') || user.correo === 'riascosmarlon66@gmail.com' || user.correo === 'mike.otavo15@gmail.com';
-                 const canDeleteGroup = isOwner || isAdminUser;
-
-                 return (
+          return (
+            <div className="p-4 flex flex-col h-full relative">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-4xl font-comic text-black dark:text-white drop-shadow-[2px_2px_0_#fff]">ESTADOS</h2>
+                <button
+                  onClick={() => setShowCreateStoryModal(true)}
+                  className="border-[3px] border-black bg-emerald-400 hover:bg-emerald-500 text-black px-3 py-1.5 rounded-full font-comic text-xs shadow-[2px_2px_0_#000] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all flex items-center gap-1 font-extrabold cursor-pointer"
+                >
+                  <Plus size={16} strokeWidth={3} />
+                  <span>Añadir</span>
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pb-24">
+                 {/* My status card */}
+                 {myUserStories.length === 0 ? (
                    <div 
-                     key={group.userId}
-                     onClick={() => {
-                       setActiveUserIndex(groupIdx);
-                       setActiveStoryIndex(0);
-                       setStoryViewerOpen(true);
-                     }}
-                     className="border-[4px] border-black bg-white relative overflow-hidden cursor-pointer shadow-[4px_4px_0_rgba(0,0,0,1)] aspect-[3/4] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all group"
+                     onClick={() => setShowCreateStoryModal(true)}
+                     className="border-[3.5px] border-black bg-slate-100 dark:bg-[#221c32] relative overflow-hidden cursor-pointer shadow-[4px_4px_0_rgba(0,0,0,1)] aspect-[3/4] rounded-2xl active:translate-y-1 active:translate-x-1 active:shadow-none transition-all group flex flex-col justify-between p-4 select-none"
                    >
-                     {latestStory.imagen ? (
+                     <div className="flex-1 flex items-center justify-center relative">
+                        <div className="relative">
+                          {user.avatar ? (
+                            <img src={user.avatar} alt="Mi perfil" className="w-16 h-16 rounded-full border-[3px] border-black object-cover shadow-[2px_2px_0_#000]" />
+                          ) : (
+                            <div className="w-16 h-16 rounded-full border-[3px] border-black bg-amber-300 flex items-center justify-center text-black font-comic text-3xl shadow-[2px_2px_0_#000]">
+                              {(user.nombre || 'E').charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          {/* WhatsApp Green Plus Badge */}
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-black flex items-center justify-center text-white shadow-[1px_1px_0_#000] group-hover:scale-110 transition-transform">
+                            <Plus size={14} strokeWidth={3} />
+                          </div>
+                        </div>
+                     </div>
+                     <div className="relative z-10 text-left">
+                       <span className="font-comic font-black text-xs text-black dark:text-white drop-shadow-sm block">Añadir estado</span>
+                     </div>
+                     <div className="absolute inset-0 halftone-bg opacity-15 mix-blend-multiply pointer-events-none"></div>
+                   </div>
+                 ) : (
+                   <div 
+                     onClick={() => {
+                       const myGroupIndex = storiesGroupedByUser.findIndex(g => g.userId === user.id);
+                       if (myGroupIndex !== -1) {
+                         setActiveUserIndex(myGroupIndex);
+                         setActiveStoryIndex(0);
+                         setStoryViewerOpen(true);
+                       }
+                     }}
+                     className="border-[3.5px] border-black bg-white relative overflow-hidden cursor-pointer shadow-[4px_4px_0_rgba(0,0,0,1)] aspect-[3/4] rounded-2xl active:translate-y-1 active:translate-x-1 active:shadow-none transition-all group select-none"
+                   >
+                     {latestMyStory?.imagen ? (
                        <img 
-                         src={latestStory.imagen} 
-                         alt="Story" 
-                         className="w-full h-full object-cover filter contrast-125 saturate-150 grayscale-[10%] group-hover:scale-105 transition-transform" 
+                         src={latestMyStory.imagen} 
+                         alt="Mi Estado" 
+                         className="w-full h-full object-cover filter contrast-125 saturate-150 group-hover:scale-105 transition-transform" 
                          referrerPolicy="no-referrer"
                        />
                      ) : (
-                       <div className={`w-full h-full bg-gradient-to-tr ${latestStory.background || 'from-purple-500 to-pink-500'} flex items-center justify-center p-3`}>
-                         <span className="text-sm font-bold text-white text-center leading-tight drop-shadow-md">
-                           {latestStory.texto}
+                       <div className={`w-full h-full bg-gradient-to-tr ${latestMyStory?.background || 'from-purple-500 to-pink-500'} flex items-center justify-center p-3`}>
+                         <span className="text-xs font-bold text-white text-center leading-tight drop-shadow-md">
+                           {latestMyStory?.texto}
                          </span>
                        </div>
                      )}
                      <div className="absolute inset-0 halftone-bg opacity-20 mix-blend-multiply pointer-events-none"></div>
 
-                     {/* Delete button for admin or owner on card */}
-                     {canDeleteGroup && (
+                     {/* Profile Avatar with Green Ring top-left */}
+                     <div className="absolute top-2.5 left-2.5 z-10 border-[3px] border-emerald-400 bg-black rounded-full w-11 h-11 flex items-center justify-center shadow-[2px_2px_0_#000] overflow-hidden p-0.5">
+                        {user.avatar ? (
+                           <img src={user.avatar} alt={user.nombre} className="w-full h-full object-cover rounded-full" />
+                        ) : (
+                           <span className="text-white text-sm font-black">{(user.nombre || 'E').charAt(0).toUpperCase()}</span>
+                        )}
+                     </div>
+
+                     {/* Top right actions: Add another + Delete my stories */}
+                     <div className="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5">
+                       <button
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setShowCreateStoryModal(true);
+                         }}
+                         className="border-[2px] border-black bg-emerald-500 hover:bg-emerald-600 text-white rounded-full p-1.5 shadow-[2px_2px_0_#000] active:scale-90 transition-transform cursor-pointer"
+                         title="Añadir otro estado"
+                       >
+                         <Plus size={14} strokeWidth={3} />
+                       </button>
+
                        <button
                          onClick={async (e) => {
                            e.stopPropagation();
-                           if (confirm(`¿Seguro que deseas eliminar los estados de ${group.usuarioNombre}?`)) {
+                           if (confirm("¿Seguro que deseas eliminar tus estados?")) {
                              try {
-                               for (const s of group.stories) {
+                               for (const s of myUserStories) {
                                  await deleteHistoria(s.id);
                                }
-                             } catch (err) {
-                               console.error(err);
+                               setHistorias(prev => prev.filter(h => h.usuarioId !== user.id));
+                               alert("Tus estados han sido eliminados con éxito 🗑️");
+                             } catch (err: any) {
+                               console.error("Error al eliminar estados:", err);
+                               alert("Error al eliminar estados: " + (err?.message || "Intenta de nuevo."));
                              }
                            }
                          }}
-                         className="absolute top-2 left-2 z-20 border-[2.5px] border-black bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-[2px_2px_0_#000] active:scale-90 transition-transform cursor-pointer"
-                         title="Eliminar Estados"
+                         className="border-[2px] border-black bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-[2px_2px_0_#000] active:scale-90 transition-transform cursor-pointer"
+                         title="Eliminar mis estados"
                        >
                          <Trash2 size={14} />
                        </button>
-                     )}
-
-                     {/* Profile circle top-right */}
-                     <div className="absolute top-2 right-2 z-10 border-[3px] border-black bg-purple-500 rounded-full w-10 h-10 flex items-center justify-center shadow-[2px_2px_0_#000] overflow-hidden">
-                        {group.usuarioAvatar ? (
-                           <img src={group.usuarioAvatar} alt={group.usuarioNombre} className="w-full h-full object-cover" />
-                        ) : (
-                           <span className="text-white text-sm font-black">{(group.usuarioNombre || 'E').charAt(0).toUpperCase()}</span>
-                        )}
                      </div>
-                     <div className="absolute bottom-2 left-2 right-2 text-center z-10">
-                        <span className="bg-white border-[2px] border-black px-2 py-0.5 text-black font-black text-[10px] shadow-[2px_2px_0_#000] truncate block max-w-full">
-                           {group.usuarioNombre}
+
+                     <div className="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+                        <span className="bg-black/80 text-white border-[2px] border-white px-2 py-0.5 font-comic font-black text-xs shadow-[2px_2px_0_#000] truncate block max-w-full">
+                           Mi Estado
                         </span>
                      </div>
                    </div>
-                 );
-               })}
+                 )}
+
+                 {/* Other users status cards */}
+                 {otherUsersGrouped.map((group) => {
+                   const latestStory = group.stories[group.stories.length - 1];
+                   const groupIndexInAll = storiesGroupedByUser.findIndex(g => g.userId === group.userId);
+
+                   return (
+                     <div 
+                       key={group.userId}
+                       onClick={() => {
+                         if (groupIndexInAll !== -1) {
+                           setActiveUserIndex(groupIndexInAll);
+                           setActiveStoryIndex(0);
+                           setStoryViewerOpen(true);
+                         }
+                       }}
+                       className="border-[3.5px] border-black bg-white relative overflow-hidden cursor-pointer shadow-[4px_4px_0_rgba(0,0,0,1)] aspect-[3/4] rounded-2xl active:translate-y-1 active:translate-x-1 active:shadow-none transition-all group select-none"
+                     >
+                       {latestStory.imagen ? (
+                         <img 
+                           src={latestStory.imagen} 
+                           alt="Story" 
+                           className="w-full h-full object-cover filter contrast-125 saturate-150 group-hover:scale-105 transition-transform" 
+                           referrerPolicy="no-referrer"
+                         />
+                       ) : (
+                         <div className={`w-full h-full bg-gradient-to-tr ${latestStory.background || 'from-purple-500 to-pink-500'} flex items-center justify-center p-3`}>
+                           <span className="text-xs font-bold text-white text-center leading-tight drop-shadow-md">
+                             {latestStory.texto}
+                           </span>
+                         </div>
+                       )}
+                       <div className="absolute inset-0 halftone-bg opacity-20 mix-blend-multiply pointer-events-none"></div>
+
+                       {/* Delete button: solo admin puede borrar estados de otros usuarios */}
+                       {(user?.rol === 'admin' || user?.correo?.endsWith('@fusaexplor.com') || user?.correo?.endsWith('@fusaexplorer.com') || user?.correo === 'riascosmarlon66@gmail.com' || user?.correo === 'mike.otavo15@gmail.com') && (
+                         <button
+                           onClick={async (e) => {
+                             e.stopPropagation();
+                             if (confirm(`¿Seguro que deseas eliminar los estados de ${group.usuarioNombre}?`)) {
+                               try {
+                                 for (const s of group.stories) {
+                                   await deleteHistoria(s.id);
+                                 }
+                                 setHistorias(prev => prev.filter(h => h.usuarioId !== group.userId));
+                                 alert("Estados eliminados con éxito 🗑️");
+                               } catch (err: any) {
+                                 console.error("Error al eliminar estados:", err);
+                                 alert("Error al eliminar estados: " + (err?.message || "Intenta de nuevo."));
+                               }
+                             }
+                           }}
+                           className="absolute top-2.5 right-2.5 z-20 border-[2px] border-black bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-[2px_2px_0_#000] active:scale-90 transition-transform cursor-pointer"
+                           title="Eliminar Estados"
+                         >
+                           <Trash2 size={14} />
+                         </button>
+                       )}
+
+                       {/* WhatsApp style Profile Ring top-left */}
+                       <div className="absolute top-2.5 left-2.5 z-10 border-[3px] border-emerald-400 bg-black rounded-full w-11 h-11 flex items-center justify-center shadow-[2px_2px_0_#000] overflow-hidden p-0.5">
+                          {group.usuarioAvatar ? (
+                             <img src={group.usuarioAvatar} alt={group.usuarioNombre} className="w-full h-full object-cover rounded-full" />
+                          ) : (
+                             <span className="text-white text-sm font-black">{(group.usuarioNombre || 'E').charAt(0).toUpperCase()}</span>
+                          )}
+                       </div>
+
+                       <div className="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+                          <span className="bg-black/80 text-white border-[2px] border-white px-2 py-0.5 font-comic font-black text-xs shadow-[2px_2px_0_#000] truncate block max-w-full">
+                             {group.usuarioNombre}
+                          </span>
+                       </div>
+                     </div>
+                   );
+                 })}
+              </div>
             </div>
-            
-            {/* Create new story floating button */}
-            <button 
-              onClick={() => setShowCreateStoryModal(true)}
-              className="fixed bottom-24 right-6 w-14 h-14 bg-purple-400 border-[4px] border-black rounded-full flex items-center justify-center shadow-[4px_4px_0_#000] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all z-40"
-            >
-              <Plus size={28} className="text-black" strokeWidth={3} />
-            </button>
-          </div>
-        )}
+          );
+        })()}
 
         {currentView === 'pahacer' && (
           <div className="p-6 pb-28">
@@ -3230,19 +3259,42 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                       <div className="flex-1">
                         <h4 className={`font-bold transition-colors ${darkMode ? 'text-purple-300' : 'text-slate-800'}`}>{place.nombre}</h4>
                         <p className={`text-xs mt-1 transition-colors ${darkMode ? 'text-purple-300/60' : 'text-slate-500'}`}>{place.direccion}</p>
-                        <div className="flex gap-2 mt-2">
-                           <button 
-                            onClick={(e) => { e.stopPropagation(); toggleFavorite(place.id); }}
-                            className={`${favoritosIds.includes(place.id) ? 'text-red-500' : (darkMode ? 'text-pink-300/30 hover:text-pink-300' : 'text-slate-300 hover:text-slate-400')} transition-colors`}
-                           >
-                              <Heart size={16} fill={favoritosIds.includes(place.id) ? "currentColor" : "none"} />
-                           </button>
-                           <button 
-                            onClick={(e) => { e.stopPropagation(); toggleSave(place.id); }}
-                            className={`${guardadosIds.includes(place.id) ? (darkMode ? 'text-pink-300' : 'text-primary') : (darkMode ? 'text-pink-300/30 hover:text-pink-300' : 'text-slate-300 hover:text-slate-400')} transition-colors`}
-                           >
-                              <Bookmark size={16} fill={guardadosIds.includes(place.id) ? "currentColor" : "none"} />
-                           </button>
+                        <div className="flex gap-2 mt-2 items-center justify-between">
+                           <div className="flex gap-2">
+                             <button 
+                              onClick={(e) => { e.stopPropagation(); toggleFavorite(place.id); }}
+                              className={`${favoritosIds.includes(place.id) ? 'text-red-500' : (darkMode ? 'text-pink-300/30 hover:text-pink-300' : 'text-slate-300 hover:text-slate-400')} transition-colors`}
+                             >
+                                <Heart size={16} fill={favoritosIds.includes(place.id) ? "currentColor" : "none"} />
+                             </button>
+                             <button 
+                              onClick={(e) => { e.stopPropagation(); toggleSave(place.id); }}
+                              className={`${guardadosIds.includes(place.id) ? (darkMode ? 'text-pink-300' : 'text-primary') : (darkMode ? 'text-pink-300/30 hover:text-pink-300' : 'text-slate-300 hover:text-slate-400')} transition-colors`}
+                             >
+                                <Bookmark size={16} fill={guardadosIds.includes(place.id) ? "currentColor" : "none"} />
+                             </button>
+                           </div>
+                           {(user?.rol === 'admin' || user?.correo?.endsWith('@fusaexplor.com') || user?.correo?.endsWith('@fusaexplorer.com') || user?.correo === 'riascosmarlon66@gmail.com' || user?.correo === 'mike.otavo15@gmail.com') && (
+                             <button
+                               onClick={async (e) => {
+                                 e.stopPropagation();
+                                 if (confirm(`¿Seguro que deseas eliminar "${place.nombre}"?`)) {
+                                   try {
+                                     await deleteLugar(place.id);
+                                     setLugares(prev => prev.filter(l => l.id !== place.id));
+                                     if (selectedLugar?.id === place.id) setSelectedLugar(null);
+                                     alert("Lugar eliminado con éxito 🗑️");
+                                   } catch (err: any) {
+                                     alert("Error al eliminar lugar: " + (err?.message || "Intenta de nuevo."));
+                                   }
+                                 }
+                               }}
+                               className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors cursor-pointer"
+                               title="Eliminar lugar"
+                             >
+                               <Trash2 size={16} />
+                             </button>
+                           )}
                         </div>
                       </div>
                     </motion.div>
@@ -3712,20 +3764,6 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                <ChevronRight size={20} className={darkMode ? "text-pink-300" : "text-slate-300"} />
             </button>
 
-            {/* Clima en Fusa */}
-            <button 
-              onClick={() => setCurrentView('clima')}
-              className={`w-full p-4 rounded-2xl flex items-center justify-between border transition-all ${
-                darkMode ? 'bg-[#221c32] border-pink-500/10 text-pink-200' : 'bg-white border-slate-100 shadow-sm text-slate-800'
-              }`}
-            >
-               <div className="flex items-center gap-3">
-                 <CloudSun size={20} className={darkMode ? "text-pink-300" : "text-secondary"} />
-                 <span className="font-medium text-sm">Clima en Fusa (En Vivo)</span>
-               </div>
-               <ChevronRight size={20} className={darkMode ? "text-pink-300" : "text-slate-300"} />
-            </button>
-
             {user.rol === 'admin' && (
                <button 
                 onClick={() => { setLugarToEdit(null); setShowLugarModal(true); }}
@@ -3778,11 +3816,12 @@ const DashboardView = ({ user }: { user: Usuario }) => {
             onDelete={async (id) => {
               try {
                 await deleteLugar(id);
+                setLugares(prev => prev.filter(l => l.id !== id));
                 setSelectedLugar(null);
-                alert("Lugar eliminado con éxito");
-              } catch (error) {
+                alert("Lugar eliminado con éxito 🗑️");
+              } catch (error: any) {
                 console.error("Error deleting place:", error);
-                alert("No tienes permisos suficientes para eliminar");
+                alert("Error al eliminar lugar: " + (error?.message || "Intenta de nuevo."));
               }
             }}
             onEdit={(lugar) => {
@@ -4199,7 +4238,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
           if (!activeStory) return null;
 
           const isOwnStory = activeStory.usuarioId === user.id || userGroup.userId === user.id;
-          const isAdminUser = user.rol === 'admin' || user.correo?.endsWith('@fusaexplor.com') || user.correo === 'riascosmarlon66@gmail.com' || user.correo === 'mike.otavo15@gmail.com';
+          const isAdminUser = user.rol === 'admin' || user.correo?.endsWith('@fusaexplor.com') || user.correo?.endsWith('@fusaexplorer.com') || user.correo === 'riascosmarlon66@gmail.com' || user.correo === 'mike.otavo15@gmail.com' || user.correo === 'mike.otavo@fusaexplor.com';
           const canDeleteStory = isOwnStory || isAdminUser;
 
           return (
@@ -4246,15 +4285,18 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                           e.stopPropagation();
                           if (confirm("¿Seguro que deseas eliminar este estado?")) {
                             try {
-                              await deleteHistoria(activeStory.id);
-                              // Handle state transitioning
+                              const storyToDeleteId = activeStory.id;
+                              await deleteHistoria(storyToDeleteId);
+                              setHistorias(prev => prev.filter(h => h.id !== storyToDeleteId));
+                              alert("Estado eliminado con éxito 🗑️");
                               if (userGroup.stories.length > 1) {
                                 handleNextStory();
                               } else {
                                 setStoryViewerOpen(false);
                               }
                             } catch (error) {
-                              console.error(error);
+                              console.error("Error al eliminar estado:", error);
+                              alert("No se pudo eliminar el estado o no tienes permisos suficientes.");
                             }
                           }
                         }}

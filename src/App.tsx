@@ -3186,6 +3186,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                 );
               })}
             </div>
+          )}
 
             {selectedCategory && (
               <div ref={resultsRef} className={`mt-10 pt-4 border-t transition-colors ${darkMode ? 'border-pink-500/10' : 'border-slate-100'}`}>

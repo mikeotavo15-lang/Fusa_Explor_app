@@ -1459,19 +1459,6 @@ const LoginView = () => {
                 />
               </div>
 
-              {isRegistering && (
-                <div className="my-2 border-[4px] border-black rounded-xl p-2 bg-purple-50 shadow-[3px_3px_0_#000]">
-                  <NotARobotCaptcha onVerify={setCaptchaVerified} />
-                </div>
-              )}
-
-              <button 
-                type="submit"
-                disabled={loading || (isRegistering && !captchaVerified)}
-                className="w-full bg-pink-500 text-white border-[4px] border-black rounded-2xl p-4 font-black uppercase shadow-[5px_5px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none hover:bg-pink-400 transition-all disabled:opacity-50 text-xl tracking-wider font-comic cursor-pointer mt-2"
-              >
-                {loading ? 'CARGANDO...' : (isRegistering ? '¡CONFIRMAR REGISTRO!' : '¡ENTRAR!')}
-              </button>
               
               <div className="flex justify-between items-center mt-5 pt-4 border-t-4 border-dashed border-black">
                 <button 

@@ -60,7 +60,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   onAuthStateChanged,
   signOut,
-  FacebookAuthProvider,
   User as FirebaseUser,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -1284,27 +1283,6 @@ const LoginView = () => {
     }
   };
 
-  const handleFacebookLogin = async () => {
-    if (loading) return;
-    setError('');
-    setLoading(true);
-    const provider = new FacebookAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err: any) {
-      console.error("Facebook Login failed", err);
-      if (err.code === 'auth/popup-closed-by-user') {
-        setError('Inicio de sesión cancelado por el usuario.');
-      } else if (err.code === 'auth/popup-blocked') {
-        setError('El navegador bloqueó la ventana emergente.');
-      } else {
-        setError("El ingreso con Facebook falló. Por favor intenta de nuevo.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -1411,19 +1389,6 @@ const LoginView = () => {
               </div>
             </div>
             
-            {/* Facebook Button in comic style */}
-            <div 
-              className="relative group cursor-pointer w-full mt-4" 
-              onClick={handleFacebookLogin}
-            >
-              <div className="bg-[#3b5998] border-[4px] border-black py-4 px-6 rounded-2xl font-black flex items-center justify-center gap-3 text-white shadow-[6px_6px_0_rgba(0,0,0,1)] active:translate-y-1 active:translate-x-1 active:shadow-none hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[8px_8px_0_rgba(0,0,0,1)] transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-                  <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z" />
-                </svg>
-                <span className="text-lg uppercase font-comic tracking-widest text-white">CON FACEBOOK</span>
-              </div>
-            </div>
-
             {/* Email Option */}
             <button 
               onClick={() => setShowEmailForm(true)}

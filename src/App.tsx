@@ -360,7 +360,7 @@ const BrandLogo = ({ animated = false, size = "md", yellow = false }: { animated
             textAnchor="middle" 
             letterSpacing="0.06em"
           >
-            FUSA EXPLORER
+            FUSA EXPLOR
           </text>
 
           {/* TAPERED GOLD UNDERLINE */}

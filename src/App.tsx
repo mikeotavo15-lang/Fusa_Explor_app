@@ -1424,7 +1424,13 @@ const LoginView = () => {
                 />
               </div>
 
-              
+              <button
+                type="submit"
+                className="w-full mt-4 bg-black text-white border-[4px] border-black py-4 rounded-2xl font-black uppercase tracking-widest shadow-[6px_6px_0_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all"
+              >
+                {isRegistering ? 'CREAR CUENTA' : 'INGRESAR CON CORREO'}
+              </button>
+
               <div className="flex justify-between items-center mt-5 pt-4 border-t-4 border-dashed border-black">
                 <button 
                   type="button"
@@ -2518,7 +2524,8 @@ const DashboardView = ({ user }: { user: Usuario }) => {
       try {
         const fetchPromise = (async () => {
           let categoriesData = await getCategorias();
-          if (categoriesData.length === 0 && user.rol === 'admin') {
+          if (categoriesData.length === 0) {
+            console.log('No se encontraron categorías. Iniciando seed de datos predeterminados...');
             await seedDatabase(user.id);
             categoriesData = await getCategorias();
           }
@@ -3134,13 +3141,19 @@ const DashboardView = ({ user }: { user: Usuario }) => {
             </div>
 
             {/* Circular Pattern Button Grid matching image.png styling */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 justify-items-center">
-              {categorias.map(cat => {
-                const Icon = getCategoryIcon(cat);
-                const isSelected = selectedCategory === cat.id;
-                
-                return (
-                  <button 
+            {categorias.length === 0 ? (
+              <div className={`rounded-[32px] border-4 border-dashed p-8 text-center ${darkMode ? 'bg-[#1b1630] border-pink-500/20 text-pink-200' : 'bg-white border-slate-200 text-slate-500'}`}>
+                <p className="font-bold uppercase tracking-widest mb-2">Aún cargando categorías</p>
+                <p className="text-xs leading-relaxed">Espera un momento o recarga la página para que las categorías aparezcan correctamente.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 justify-items-center">
+                {categorias.map(cat => {
+                  const Icon = getCategoryIcon(cat);
+                  const isSelected = selectedCategory === cat.id;
+                  
+                  return (
+                    <button 
                     key={cat.id}
                     onClick={() => handleCategorySelect(cat.id)}
                     className="flex flex-col items-center group focus:outline-none transition-all active:scale-95"

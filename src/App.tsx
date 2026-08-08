@@ -1395,7 +1395,7 @@ const LoginView = () => {
               className="mt-6 flex items-center justify-center gap-2.5 w-full bg-white border-[4px] border-black py-3 rounded-2xl font-black uppercase text-xs shadow-[4px_4px_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none hover:bg-purple-100 transition-all text-black cursor-pointer tracking-widest font-comic"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              ENTRAR CON CORREO
+              INGRESAR CON CORREO
             </button>
           </div>
         ) : (

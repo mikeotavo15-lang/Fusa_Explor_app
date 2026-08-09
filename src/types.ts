@@ -29,7 +29,7 @@ export interface Lugar {
   destacadoHasta?: string;
   propietarioId: string;
   imagen?: string;
-  imagenes?: string[]; // Multiple photos support
+  imagenes?: string[]; 
   anuncioActivo?: boolean;
   anuncioImagen?: string;
   anuncioDuracion?: '1d' | '2d' | '5d' | '15d' | '1m';
@@ -72,15 +72,5 @@ export interface Comentario {
   createdAt?: any;
 }
 
-export interface Reporte {
-  id: string;
-  tipo: 'trafico' | 'policia' | 'derrumbe' | 'semaforo' | 'desvio' | 'accidente';
-  descripcion: string;
-  lat: number;
-  lng: number;
-  creadorId: string;
-  creadorNombre: string;
-  likes: number;
-  createdAt?: any;
-}
+
 

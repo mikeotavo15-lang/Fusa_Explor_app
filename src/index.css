@@ -21,7 +21,7 @@ body, input, select, textarea, button, span, p, div, a {
 
 .font-comic {
   font-family: var(--font-comic) !important;
-  font-weight: 400 !important; /* Bangers display font looks best at native weight */
+  font-weight: 400 !important;
 }
 
 .halftone-bg {

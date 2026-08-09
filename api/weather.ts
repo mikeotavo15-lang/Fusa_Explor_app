@@ -12,7 +12,7 @@ import {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const queryCity = (req.query.q as string) || "";
 
-  // --- Caso 1: se pidió una ciudad específica (?q=nombre) ---
+  
   if (queryCity && queryCity.trim()) {
     const cityName = queryCity.trim();
     let resultData: any = null;
@@ -127,7 +127,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       FIXED_CITIES.map(async (city) => {
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2000);
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
 
           const response = await fetch(
             `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=America/Bogota`,

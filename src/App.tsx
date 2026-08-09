@@ -1741,7 +1741,8 @@ const ProfileView = ({
   if (loading) {
     return (
       <div 
-        className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden touch-none select-none ${
+        className={`fixed inset-0 z-50 flex flex
+          -col items-center justify-center overflow-hidden touch-none select-none ${
           darkMode ? 'bg-[#181524]' : 'bg-white'
         }`}
         onWheel={(e) => e.preventDefault()}
@@ -1812,7 +1813,7 @@ const ProfileView = ({
           className="hidden" 
         />
 
-        {/* Restore Social Media Registration photo button */}
+        
         {auth.currentUser?.photoURL && user.avatar !== auth.currentUser.photoURL && (
           <button
             type="button"
@@ -1900,7 +1901,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
   const [currentView, setCurrentView] = useState<'inicio' | 'guardados' | 'favoritos' | 'pahacer' | 'menu' | 'perfil' | 'clima' | 'estados'>('inicio');
   const [darkMode, setDarkMode] = useState<boolean>(() => localStorage.getItem('fusa-pastel-dark') === 'true');
 
-  // Sync selectedLugar with the real-time lugares list to prevent stale data/images after editing!
+
   useEffect(() => {
     if (selectedLugar) {
       const updated = lugares.find(l => l.id === selectedLugar.id);
@@ -1947,13 +1948,13 @@ const DashboardView = ({ user }: { user: Usuario }) => {
   const [newStoryLugar, setNewStoryLugar] = useState<string>('');
   const [isSubmittingStory, setIsSubmittingStory] = useState(false);
 
-  // Story Viewer state
+ 
   const [storyViewerOpen, setStoryViewerOpen] = useState(false);
   const [activeUserIndex, setActiveUserIndex] = useState(0);
   const [activeStoryIndex, setActiveStoryIndex] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
 
-  // Story Reactions and Comment state
+
   const [floatingHearts, setFloatingHearts] = useState<{ id: number, x: number }[]>([]);
   const [storyCommentText, setStoryCommentText] = useState('');
   const [storyToast, setStoryToast] = useState<string | null>(null);
@@ -1991,7 +1992,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
       createdAt: new Date().toISOString()
     };
 
-    // Optimistically update local historias state
+
     setHistorias(prev => prev.map(h => {
       if (h.id === currentStory.id) {
         return {
@@ -2002,7 +2003,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
       return h;
     }));
 
-    // Save to Firestore so it persists for all users for 24h
+    
     addComentarioAHistoria(currentStory.id, newComment);
 
     handleSendPurpleHeart();
@@ -2020,13 +2021,13 @@ const DashboardView = ({ user }: { user: Usuario }) => {
     'from-fuchsia-300 to-purple-500'
   ];
 
-  // Subscribe to stories real-time
+
   useEffect(() => {
     const unsubscribe = subscribeToHistorias((data) => {
       const now = Date.now();
-      // Filter out stories older than 24h safely handling any timezone and data representation (Timestamp vs String)
+
       const active = (data || []).filter(h => {
-        if (!h.expiresAt) return true; // Fail safe: show if expiration is undefined
+        if (!h.expiresAt) return true; 
         let dateObj: Date;
         const exp = h.expiresAt as any;
         if (typeof exp === 'string') {
@@ -2100,12 +2101,12 @@ const DashboardView = ({ user }: { user: Usuario }) => {
     if (activeStoryIndex < currentUserGroup.stories.length - 1) {
       setActiveStoryIndex(prev => prev + 1);
     } else {
-      // Move to next user
+
       if (activeUserIndex < storiesGroupedByUser.length - 1) {
         setActiveUserIndex(prev => prev + 1);
         setActiveStoryIndex(0);
       } else {
-        // No more stories, close
+    
         setStoryViewerOpen(false);
       }
     }
@@ -2115,19 +2116,19 @@ const DashboardView = ({ user }: { user: Usuario }) => {
     if (activeStoryIndex > 0) {
       setActiveStoryIndex(prev => prev - 1);
     } else {
-      // Move to previous user
+ 
       if (activeUserIndex > 0) {
         setActiveUserIndex(prev => prev - 1);
         const prevUserGroup = storiesGroupedByUser[activeUserIndex - 1];
         setActiveStoryIndex(prevUserGroup.stories.length - 1);
       } else {
-        // Restart current story progress
+     
         setStoryProgress(0);
       }
     }
   }, [activeUserIndex, activeStoryIndex, storiesGroupedByUser]);
 
-  // 15 seconds auto-advance timer for stories
+  
   useEffect(() => {
     if (!storyViewerOpen) return;
     setStoryProgress(0);
@@ -2194,7 +2195,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
         lugarNombre: selectedLugar?.nombre || '',
         expiresAt: expiresAtDate
       });
-      // Reset & close
+  
       setShowCreateStoryModal(false);
       setNewStoryText('');
       setNewStoryImage(null);
@@ -2362,6 +2363,56 @@ const DashboardView = ({ user }: { user: Usuario }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const NEARBY_ZONES: { [city: string]: { name: string; lat: number; lng: number; label: string }[] } = {
+    'Fusagasugá': [
+      { name: 'Chinauta', lat: 4.2760, lng: -74.4550, label: 'Bajo Fusagasugá (Cálido/Piscinas)' },
+      { name: 'Pasca', lat: 4.3106, lng: -74.2967, label: 'Alto Fusagasugá (Frío/Paramuno)' },
+    ],
+    'Bogotá': [
+      { name: 'Monserrate', lat: 4.6053, lng: -74.0553, label: 'Cerro Oriental (Fresco/Mirador)' },
+      { name: 'La Calera', lat: 4.7186, lng: -73.9668, label: 'Vía perimetral (Frío/Montaña)' },
+    ],
+    'Ibagué': [
+      { name: 'Cañón del Combeima', lat: 4.4900, lng: -75.3300, label: 'Zona Ecológica (Templado/Nevado)' },
+      { name: 'Totare (Bajo)', lat: 4.5700, lng: -74.9800, label: 'Valle de Ibagué (Cálido/Planicie)' },
+    ],
+    'Melgar': [
+      { name: 'Piscilago', lat: 4.2400, lng: -74.6300, label: 'Parque temático (Muy Cálido)' },
+      { name: 'Carmen de Apicalá', lat: 4.1450, lng: -74.7160, label: 'Municipio Vecino (Clima Cálido)' },
+    ],
+  };
+
+  const [nearbyZonesWeather, setNearbyZonesWeather] = useState<{
+    [zoneName: string]: { temp: number; code: number } | null;
+  }>({});
+
+  useEffect(() => {
+    const zones = NEARBY_ZONES[activeWeatherCity];
+    if (!zones) return;
+    let cancelled = false;
+
+    zones.forEach(async (zone) => {
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${zone.lat}&longitude=${zone.lng}&current=temperature_2m,weather_code&timezone=America/Bogota`;
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled && data?.current) {
+          setNearbyZonesWeather(prev => ({
+            ...prev,
+            [zone.name]: {
+              temp: Math.round(data.current.temperature_2m),
+              code: data.current.weather_code,
+            },
+          }));
+        }
+      } catch (err) {
+        console.log(`No se pudo obtener clima real de ${zone.name}, se omite del comparativo.`);
+      }
+    });
+
+    return () => { cancelled = true; };
+  }, [activeWeatherCity]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -3497,118 +3548,30 @@ const DashboardView = ({ user }: { user: Usuario }) => {
               </div>
             </div>
 
-            {activeWeatherCity === 'Fusagasugá' && (
+           {NEARBY_ZONES[activeWeatherCity] && (
               <div className="space-y-3">
                 <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">Chinauta</span>
-                      <span className="text-xs font-bold text-amber-500">+4°C</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Bajo Fusagasugá (Cálido/Piscinas)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp + 4}°C` : '26°C'}
-                    </span>
-                  </div>
-
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">Pasca (Páramo)</span>
-                      <span className="text-xs font-bold text-sky-500">-6°C</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Alto Fusagasugá (Frío/Paramuno)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp - 6}°C` : '16°C'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeWeatherCity === 'Bogotá' && (
-              <div className="space-y-3">
-                <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">Monserrate</span>
-                      <span className="text-xs font-bold text-sky-500">-3°C</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Cerro Oriental (Fresco/Mirador)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp - 3}°C` : '12°C'}
-                    </span>
-                  </div>
-
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">La Calera</span>
-                      <span className="text-xs font-bold text-sky-400">-2°C</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Vía perimetral (Frío/Montaña)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp - 2}°C` : '13°C'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeWeatherCity === 'Ibagué' && (
-              <div className="space-y-3">
-                <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">Cañón del Combeima</span>
-                      <span className="text-xs font-bold text-sky-400">-4°C</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Zona Ecológica (Templado/Nevado)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp - 4}°C` : '22°C'}
-                    </span>
-                  </div>
-
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">Totare (Bajo)</span>
-                      <span className="text-xs font-bold text-amber-500">+3°C</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Valle de Ibagué (Cálido/Planicie)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp + 3}°C` : '29°C'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeWeatherCity === 'Melgar' && (
-              <div className="space-y-3">
-                <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">Piscilago</span>
-                      <span className="text-xs font-bold text-amber-500">+1°C</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Parque temático (Muy Cálido)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp + 1}°C` : '32°C'}
-                    </span>
-                  </div>
-
-                  <div className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-sm">Carmen de Apicalá</span>
-                      <span className="text-xs font-bold text-amber-400">Igual</span>
-                    </div>
-                    <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>Municipio Vecino (Clima Cálido)</p>
-                    <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
-                      {weatherData ? `${weatherData.temp}°C` : '31°C'}
-                    </span>
-                  </div>
+                  {NEARBY_ZONES[activeWeatherCity].map((zone) => {
+                    const zoneWeather = nearbyZonesWeather[zone.name];
+                    const delta = zoneWeather && weatherData ? zoneWeather.temp - weatherData.temp : null;
+                    return (
+                      <div key={zone.name} className={`p-4 rounded-3xl border transition-all ${darkMode ? 'bg-[#211d33] border-pink-500/10' : 'bg-white border-slate-100 shadow-sm'}`}>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="font-bold text-sm">{zone.name}</span>
+                          {delta !== null && (
+                            <span className={`text-xs font-bold ${delta > 0 ? 'text-amber-500' : delta < 0 ? 'text-sky-500' : 'text-amber-400'}`}>
+                              {delta > 0 ? `+${delta}°C` : delta < 0 ? `${delta}°C` : 'Igual'}
+                            </span>
+                          )}
+                        </div>
+                        <p className={`text-[10px] ${darkMode ? 'text-purple-200/60' : 'text-slate-400'} mb-2`}>{zone.label}</p>
+                        <span className={`text-lg font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                          {zoneWeather ? `${zoneWeather.temp}°C` : 'Cargando...'}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

@@ -1,20 +1,13 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 🌺 Fusa Explor
 
-# Run and deploy your AI Studio app
+Aplicación web de turismo local para **Fusagasugá, Cundinamarca (Colombia)**. Permite a los usuarios descubrir lugares turísticos, publicar y ver "estados" (historias tipo redes sociales), consultar el clima en tiempo real de varias zonas, y a los administradores gestionar el contenido de la plataforma.
 
-This contains everything you need to run your app locally.
+## ✨ Funcionalidades principales
 
-View your app in AI Studio: https://ai.studio/apps/55a3e127-e07e-44b5-8978-69394da03ef7
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- **Explorar lugares**: mapa y listado de sitios turísticos de Fusagasugá y alrededores, organizados por categorías.
+- **Estados / Historias**: los usuarios pueden publicar historias temporales (fotos/texto) visibles para la comunidad.
+- **Clima en tiempo real**: temperatura y pronóstico de 5 días para Fusagasugá, Bogotá, Ibagué y Melgar, más una comparativa de zonas cercanas (Chinauta, Pasca, Monserrate, La Calera, Cañón del Combeima, Piscilago, etc.), todo con datos reales de [Open-Meteo](https://open-meteo.com/), calibrados opcionalmente con Google Gemini + Google Search.
+- **Autenticación**: inicio de sesión con Google o con correo/contraseña (vía Firebase Authentication).
+- **Panel de administración**: los administradores pueden crear, editar y eliminar lugares, y moderar/eliminar estados de cualquier usuario.
+- **Asistente conversacional**: chat con IA (Gemini) para recomendaciones y preguntas sobre Fusagasugá.
+- **Moderación de contenido**: revisión automática de texto/imágenes antes de publicarse, usando Gemini.

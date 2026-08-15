@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getGeminiClient, hasValidApiKey } from "./_lib/gemini";
-import { getLocalHeuristicResponse, systemInstruction } from "./_lib/chat-assistant";
+import { getGeminiClient, hasValidApiKey } from "./_lib/gemini.js";
+import { getLocalHeuristicResponse, systemInstruction } from "./_lib/chat-assistant.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {

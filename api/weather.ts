@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getGeminiClient, hasValidApiKey } from "./_lib/gemini";
+import { getGeminiClient, hasValidApiKey } from "./_lib/gemini.js";
 import {
   DAYS,
   FIXED_CITIES,
@@ -7,7 +7,7 @@ import {
   SINGLE_CITY_FALLBACK,
   forecastCodeToDescription,
   weatherCodeToDescription,
-} from "./_lib/weather-data";
+} from "./_lib/weather-data.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const queryCity = (req.query.q as string) || "";

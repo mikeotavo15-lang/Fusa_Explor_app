@@ -1,5 +1,5 @@
 import { Type } from "@google/genai";
-import { getGeminiClient, hasValidApiKey } from "./gemini";
+import { getGeminiClient, hasValidApiKey } from "./gemini.js";
 
 export interface ModerationResult {
   aprobado: boolean;

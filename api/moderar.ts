@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { moderarContenidoTuristico } from "./_lib/moderation";
+import { moderarContenidoTuristico } from "./_lib/moderation.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {

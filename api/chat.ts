@@ -50,7 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } catch (geminiError: any) {
         console.warn(
           "Gemini API execution failed, falling back to local heuristic matching engine... Error:",
-          geminiError
+          geminiError?.message || JSON.stringify(geminiError?.error || geminiError)
         );
         const heuristicText = getLocalHeuristicResponse(message, lugares, categorias);
         return res.status(200).json({ response: heuristicText });

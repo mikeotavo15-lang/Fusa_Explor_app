@@ -8,13 +8,13 @@ export interface ModerationResult {
 }
 
 const colombianProfanitiesRegex =
-  /\b(gonorrea|gonorreas|gonorriento|malparido|malparida|malparidos|malparidas|hijueputa|hijueputas|hijo\s*de\s*puta|hijos\s*de\s*puta|jueputa|jueputas|triplehijueputa|catrehijueputa|perra|perras|maricon|maricón|maricones|carechimba|pirobo|pirobos|piroba|garulla|cacorro)\b/i;
+  /\b(gonorrea|gonorreas|gonorriento|malparid[oa]s?|hijueputa|hijueputas|hijo\s*de\s*puta|hijos\s*de\s*puta|jueputa|jueputas|triplehijueputa|catrehijueputa|perra|perras|maricon|maricón|maricones|carechimba|pirobo|pirobos|piroba|garulla|cacorro|p[uv][t7][a4@]s?|p[uv][t7][o0]s?|pr[o0]st[i1!]t[uú]t[a4@]s?|z[o0]rr[a4@]s?|[i1!]n[uú]t[i1!]l(es)?|p[e3]nd[e3]j[oa4@]s?)\b/i;
 
 export async function moderarContenidoTuristico(
   texto: string,
-  imagenBase64?: string // Opcional, formato: "data:image/jpeg;base64,..."
+  imagenBase64?: string 
 ): Promise<ModerationResult> {
-  // Pre-filtro local para groserías e insultos colombianos comunes
+
   if (texto && colombianProfanitiesRegex.test(texto)) {
     return {
       aprobado: false,
@@ -37,7 +37,8 @@ export async function moderarContenidoTuristico(
     `Actúa como un moderador estricto para Fusa Explor, una aplicación de turismo de Colombia.
      Analiza el texto adjunto (y la imagen si está presente). 
      Busca contenido inapropiado como:
-     - Groserías, insultos o vulgaridades en español y regionalismos colombianos (ejemplo: gonorrea, malparido, hijueputa, jueputa, perra, maricón, carechimba, pirobo, garulla, etc.).
+     - Groserías, insultos o vulgaridades en español y regionalismos colombianos (ejemplo: gonorrea, malparido, hijueputa, jueputa, perra, maricón, carechimba, pirobo, garulla, puta, prostituta, zorra, inútil, pendejo/pendeja, etc.).
+     - Variantes mal escritas, con errores intencionales, espacios, puntos o caracteres numéricos en lugar de letras (leetspeak) que busquen evadir el filtro, por ejemplo "put4", "p.u.t.a", "pu ta", "z0rra", "pend3ja". Trátalas igual que la palabra original si el significado es claro.
      - Discriminación, acoso, odio o violencia.
      - Spam político, comercial o enlaces sospechosos.
      - Desnudez, contenido explícito o vandalismo.

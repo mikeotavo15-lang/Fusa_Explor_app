@@ -375,7 +375,7 @@ const BrandLogo = ({ animated = false, size = "md", yellow = false }: { animated
 
 
 export const DashboardSkeleton = () => (
-  <div className="flex flex-col h-[100dvh] pt-8 px-6 max-w-lg mx-auto relative overflow-hidden backdrop-blur-md bg-[#3b1154]/40">
+  <div className="flex flex-col h-[100dvh] pt-8 px-6 max-w-lg mx-auto relative overflow-hidden bg-gradient-to-br from-[#2a0e4a] via-[#5b21b6] to-[#a78bfa]">
     <div className="flex items-center justify-between mb-6 shrink-0 animate-pulse">
         <div>
           <div className="w-24 h-4 bg-[#ebd5ff]/30 rounded mb-2"></div>

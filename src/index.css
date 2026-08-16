@@ -9,9 +9,16 @@
   --color-secondary: #d8b4fe; 
   --color-accent: #f8f9fa; 
 }
+html {
+  height: 100%;
+  overflow: hidden;
+}
 
 body {
   @apply bg-[#d8b4fe] text-slate-900 overflow-x-hidden font-bold;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   font-family: var(--font-sans);
 }
 
@@ -22,6 +29,19 @@ body, input, select, textarea, button, span, p, div, a {
 .font-comic {
   font-family: var(--font-comic) !important;
   font-weight: 400 !important;
+}
+font-comic-bold {
+  font-family: var(--font-comic) !important;
+  font-weight: 700 !important;
+}
+
+@keyframes comic-pow {
+  0%, 100% { transform: rotate(-2deg) scale(1); }
+  50% { transform: rotate(2deg) scale(1.06); }
+}
+
+.comic-pow-effect {
+  animation: comic-pow 1.8s ease-in-out infinite;+
 }
 
 .halftone-bg {

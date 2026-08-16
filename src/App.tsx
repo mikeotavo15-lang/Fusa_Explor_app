@@ -2569,127 +2569,369 @@ const DashboardView = ({ user }: { user: Usuario }) => {
     setGuardadosIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
-  useEffect(() => {
-    let unsubscribeLugares: () => void;
-    const fetchData = async () => {
-      try {
-        const fetchPromise = (async () => {
-          let categoriesData = await getCategorias();
-          if (categoriesData.length === 0) {
-            console.log('No se encontraron categorías. Iniciando seed de datos predeterminados...');
-            categoriesData = await getCategorias();
-          }
+useEffect(() => {
+  let unsubscribeLugares: (() => void) | undefined;
+  let cancelled = false;
 
-      
-          if (user.rol === 'admin' && categoriesData.length > 0) {
-            const expectedCategories = [
-              { id: 'cat1', nombre: 'Sitios de Interés', color: '#1d4ed8' },
-              { id: 'cat2', nombre: 'Dónde comer', color: '#ef4444' },
-              { id: 'cat3', nombre: 'Centros Comerciales', color: '#8b5cf6' },
-              { id: 'cat4', nombre: 'Hospedaje', color: '#10b981' },
-              { id: 'cat6', nombre: 'Tiendas', color: '#f59e0b' },
-              { id: 'cat7', nombre: 'Droguerías', color: '#ec4899' },
-              { id: 'cat8', nombre: 'Para salir', color: '#6366f1' },
-              { id: 'cat9', nombre: 'Iglesias', color: '#78350f' },
-              { id: 'cat10', nombre: 'Parqueaderos', color: '#475569' },
-              { id: 'cat12', nombre: 'Belleza', color: '#d946ef' },
-              { id: 'cat13', nombre: 'Talleres Mecánicos', color: '#0ea5e9' },
-              { id: 'cat14', nombre: 'Cementerios', color: '#64748b' }
-            ];
+  const withTimeout = async <T,>(
+    promise: Promise<T>,
+    timeoutMs: number,
+    fallback: T
+  ): Promise<T> => {
+    return Promise.race([
+      promise,
+      new Promise<T>((resolve) => {
+        setTimeout(() => {
+          console.warn(
+            `Fusa Explor: Firebase tardó más de ${timeoutMs} ms. Usando fallback.`
+          );
+          resolve(fallback);
+        }, timeoutMs);
+      }),
+    ]);
+  };
 
-            const extraCategories = categoriesData.filter(c => !expectedCategories.some(ec => ec.id === c.id));
+  const fetchData = async () => {
+    try {
+      /*
+       * ==========================================================
+       * 1. CARGAR CATEGORÍAS
+       * ==========================================================
+       */
 
-            const missingOrMismatched = expectedCategories.some(ec => {
-              const current = categoriesData.find(c => c.id === ec.id);
-              return !current || current.nombre !== ec.nombre || current.color !== ec.color;
-            }) || extraCategories.length > 0;
+      const localCategories: Categoria[] = [
+        {
+          id: "cat1",
+          nombre: "Sitios de Interés",
+          color: "#1d4ed8",
+        },
+        {
+          id: "cat2",
+          nombre: "Dónde comer",
+          color: "#ef4444",
+        },
+        {
+          id: "cat3",
+          nombre: "Centros Comerciales",
+          color: "#8b5cf6",
+        },
+        {
+          id: "cat4",
+          nombre: "Hospedaje",
+          color: "#10b981",
+        },
+        {
+          id: "cat6",
+          nombre: "Tiendas",
+          color: "#f59e0b",
+        },
+        {
+          id: "cat7",
+          nombre: "Droguerías",
+          color: "#ec4899",
+        },
+        {
+          id: "cat8",
+          nombre: "Para salir",
+          color: "#6366f1",
+        },
+        {
+          id: "cat9",
+          nombre: "Iglesias",
+          color: "#78350f",
+        },
+        {
+          id: "cat10",
+          nombre: "Parqueaderos",
+          color: "#475569",
+        },
+        {
+          id: "cat12",
+          nombre: "Belleza",
+          color: "#d946ef",
+        },
+        {
+          id: "cat13",
+          nombre: "Talleres Mecánicos",
+          color: "#0ea5e9",
+        },
+        {
+          id: "cat14",
+          nombre: "Cementerios",
+          color: "#475569",
+        },
+      ];
 
-            if (missingOrMismatched) {
-              console.log("Sincronizando categorías y eliminando duplicados en Firestore...");
-              try {
-                const { writeBatch, doc } = await import('firebase/firestore');
-                const batch = writeBatch(db);
-                
-                
-                for (const ec of expectedCategories) {
-                  batch.set(doc(db, 'categorias', ec.id), ec);
-                }
-                
-                
-                for (const extra of extraCategories) {
-                  batch.delete(doc(db, 'categorias', extra.id));
-                }
-                
-                await batch.commit();
-                categoriesData = await getCategorias();
-              } catch (err) {
-                console.error("Error automatic syncing categories:", err);
-              }
-            }
-          }
+      /*
+       * Intentamos Firebase durante máximo 8 segundos.
+       *
+       * Si Firebase no responde, NO bloqueamos toda la aplicación.
+       */
+      let categoriesData = await withTimeout(
+        getCategorias(),
+        8000,
+        []
+      );
 
-          
-          const uniqueCategories = (categoriesData || []).reduce<Categoria[]>((acc, current) => {
-            const normName = current.nombre.trim().toLowerCase();
-            if (current.id === 'cat5' || normName.includes('evento')) return acc;
-            const exists = acc.some(item => item.id === current.id || item.nombre.trim().toLowerCase() === normName);
-            if (!exists) {
-              acc.push(current);
-            }
-            return acc;
-          }, []);
+      /*
+       * Si Firebase devuelve categorías, utilizamos Firebase.
+       *
+       * Si devuelve vacío o tarda demasiado, utilizamos las
+       * categorías locales para que la aplicación pueda arrancar.
+       */
+      if (!categoriesData || categoriesData.length === 0) {
+        console.warn(
+          "Fusa Explor: no se pudieron cargar categorías desde Firebase. Usando categorías locales."
+        );
 
-          setCategorias(uniqueCategories);
-          return new Promise<void>((resolve) => {
-            unsubscribeLugares = subscribeToLugares((lugaresData) => {
-              const sanitized = (lugaresData || []).map(l => {
-                let lng = l.lng;
-                if (typeof lng === 'number' && lng > 0) {
-                  lng = -lng; 
-                } else if (typeof lng === 'string') {
-                  const numLng = parseFloat(lng);
-                  if (!isNaN(numLng)) {
-                    lng = numLng > 0 ? -numLng : numLng;
-                  } else {
-                    lng = -74.3638; 
-                  }
-                } else if (lng === undefined || lng === null) {
-                  lng = -74.3638; 
-                }
-
-                let lat = l.lat;
-                if (typeof lat === 'string') {
-                  const numLat = parseFloat(lat);
-                  if (!isNaN(numLat)) {
-                    lat = numLat;
-                  } else {
-                    lat = 4.3361; 
-                  }
-                } else if (lat === undefined || lat === null) {
-                  lat = 4.3361; 
-                }
-
-                return {
-                  ...l,
-                  lat: Number(lat),
-                  lng: Number(lng)
-                };
-              });
-              setLugares(sanitized);
-              resolve();
-            });
-          });
-        })();
-        await fetchPromise;
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data", error);
-        setLoading(false);
+        categoriesData = localCategories;
       }
-    };
-    fetchData();
-    return () => unsubscribeLugares?.();
-  }, [user]);
+
+      /*
+       * ==========================================================
+       * 2. DEDUPLICAR CATEGORÍAS
+       * ==========================================================
+       */
+
+      const uniqueCategories = categoriesData.reduce<Categoria[]>(
+        (acc, current) => {
+          if (!current || !current.nombre) {
+            return acc;
+          }
+
+          const normName = current.nombre
+            .trim()
+            .toLowerCase();
+
+          /*
+           * No mostrar categorías antiguas/eventos.
+           */
+          if (
+            current.id === "cat5" ||
+            normName.includes("evento")
+          ) {
+            return acc;
+          }
+
+          const exists = acc.some(
+            (item) =>
+              item.id === current.id ||
+              item.nombre.trim().toLowerCase() === normName
+          );
+
+          if (!exists) {
+            acc.push(current);
+          }
+
+          return acc;
+        },
+        []
+      );
+
+      /*
+       * Si por alguna razón el filtrado dejó cero categorías,
+       * usamos las categorías locales.
+       */
+      if (uniqueCategories.length === 0) {
+        setCategorias(localCategories);
+      } else {
+        setCategorias(uniqueCategories);
+      }
+
+      /*
+       * ==========================================================
+       * 3. CARGAR LUGARES
+       * ==========================================================
+       */
+
+      let lugaresReceived = false;
+
+      unsubscribeLugares = subscribeToLugares(
+        (lugaresData) => {
+          if (cancelled) return;
+
+          lugaresReceived = true;
+
+          const sanitized = (lugaresData || []).map((l) => {
+            let lng = l.lng;
+
+            if (typeof lng === "number" && lng > 0) {
+              lng = -lng;
+            } else if (typeof lng === "string") {
+              const numLng = parseFloat(lng);
+
+              if (!isNaN(numLng)) {
+                lng = numLng > 0 ? -numLng : numLng;
+              } else {
+                lng = -74.3638;
+              }
+            } else if (
+              lng === undefined ||
+              lng === null
+            ) {
+              lng = -74.3638;
+            }
+
+            let lat = l.lat;
+
+            if (typeof lat === "string") {
+              const numLat = parseFloat(lat);
+
+              if (!isNaN(numLat)) {
+                lat = numLat;
+              } else {
+                lat = 4.3361;
+              }
+            } else if (
+              lat === undefined ||
+              lat === null
+            ) {
+              lat = 4.3361;
+            }
+
+            return {
+              ...l,
+              lat: Number(lat),
+              lng: Number(lng),
+            };
+          });
+
+          setLugares(sanitized);
+
+          /*
+           * Firebase respondió correctamente.
+           * Podemos quitar el skeleton.
+           */
+          setLoading(false);
+        }
+      );
+
+      /*
+       * ==========================================================
+       * 4. SEGURIDAD CONTRA FIREBASE BLOQUEADO
+       * ==========================================================
+       *
+       * Si subscribeToLugares nunca responde, no dejamos
+       * al usuario atrapado indefinidamente en el skeleton.
+       */
+
+      setTimeout(() => {
+        if (cancelled) return;
+
+        if (!lugaresReceived) {
+          console.warn(
+            "Fusa Explor: Firebase lugares no respondió. Continuando con datos vacíos."
+          );
+
+          setLugares([]);
+          setLoading(false);
+        }
+      }, 8000);
+
+      /*
+       * ==========================================================
+       * 5. FALLBACK ABSOLUTO
+       * ==========================================================
+       *
+       * Incluso si algo inesperado ocurre, la aplicación
+       * debe poder salir del estado de carga.
+       */
+
+      setTimeout(() => {
+        if (cancelled) return;
+
+        setLoading(false);
+      }, 10000);
+
+    } catch (error) {
+      console.error(
+        "Fusa Explor: error cargando datos:",
+        error
+      );
+
+      /*
+       * Si Firebase falla completamente, mostramos las
+       * categorías locales y dejamos entrar al Dashboard.
+       */
+
+      setCategorias([
+        {
+          id: "cat1",
+          nombre: "Sitios de Interés",
+          color: "#1d4ed8",
+        },
+        {
+          id: "cat2",
+          nombre: "Dónde comer",
+          color: "#ef4444",
+        },
+        {
+          id: "cat3",
+          nombre: "Centros Comerciales",
+          color: "#8b5cf6",
+        },
+        {
+          id: "cat4",
+          nombre: "Hospedaje",
+          color: "#10b981",
+        },
+        {
+          id: "cat6",
+          nombre: "Tiendas",
+          color: "#f59e0b",
+        },
+        {
+          id: "cat7",
+          nombre: "Droguerías",
+          color: "#ec4899",
+        },
+        {
+          id: "cat8",
+          nombre: "Para salir",
+          color: "#6366f1",
+        },
+        {
+          id: "cat9",
+          nombre: "Iglesias",
+          color: "#78350f",
+        },
+        {
+          id: "cat10",
+          nombre: "Parqueaderos",
+          color: "#475569",
+        },
+        {
+          id: "cat12",
+          nombre: "Belleza",
+          color: "#d946ef",
+        },
+        {
+          id: "cat13",
+          nombre: "Talleres Mecánicos",
+          color: "#0ea5e9",
+        },
+        {
+          id: "cat14",
+          nombre: "Cementerios",
+          color: "#475569",
+        },
+      ]);
+
+      setLugares([]);
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+
+  return () => {
+    cancelled = true;
+
+    if (unsubscribeLugares) {
+      unsubscribeLugares();
+    }
+  };
+}, [user]);
 
   useEffect(() => {
     if (!loading && typeof (window as any).showAgent === 'function') {

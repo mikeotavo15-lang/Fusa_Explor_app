@@ -2577,7 +2577,6 @@ const DashboardView = ({ user }: { user: Usuario }) => {
           let categoriesData = await getCategorias();
           if (categoriesData.length === 0) {
             console.log('No se encontraron categorías. Iniciando seed de datos predeterminados...');
-            await seedDatabase(user.id);
             categoriesData = await getCategorias();
           }
 

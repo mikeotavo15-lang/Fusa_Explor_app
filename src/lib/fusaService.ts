@@ -58,10 +58,38 @@ export const updateUsuario = async (userId: string, data: Partial<Usuario>) => {
 
 export const getCategorias = async (): Promise<Categoria[]> => {
   try {
-    const querySnapshot = await getDocs(collection(db, 'categorias'));
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Categoria));
+    const snapshot = await getDocs(
+      collection(db, "categorias")
+    );
+
+    const categorias = snapshot.docs
+      .map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }) as Categoria)
+      .filter(
+        (categoria) =>
+          typeof categoria.nombre === "string" &&
+          categoria.nombre.trim().length > 0
+      );
+
+    console.log(
+      `Fusa Explor: ${categorias.length} categorías cargadas`
+    );
+
+    return categorias;
   } catch (error) {
-    handleFirestoreError(error, OperationType.LIST, 'categorias');
+    console.error(
+      "Fusa Explor: error cargando categorías:",
+      error
+    );
+
+    handleFirestoreError(
+      error,
+      OperationType.LIST,
+      "categorias"
+    );
+
     return [];
   }
 };

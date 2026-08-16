@@ -2517,7 +2517,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
     }
   };
   
-  // Geolocation and Distance Logic - live real-time GPS
+
   const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null);
 
   useEffect(() => {
@@ -2543,7 +2543,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
     return (R * c).toFixed(1) + " km";
   };
 
-  // Favorites and Saved State
+
   const [favoritosIds, setFavoritosIds] = useState<string[]>(() => {
     const saved = localStorage.getItem('fusa_favoritos');
     return saved ? JSON.parse(saved) : [];
@@ -2581,7 +2581,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
             categoriesData = await getCategorias();
           }
 
-          // Auto-sync requested categories for Admin users to keep Firestore exactly up to date
+      
           if (user.rol === 'admin' && categoriesData.length > 0) {
             const expectedCategories = [
               { id: 'cat1', nombre: 'Sitios de Interés', color: '#1d4ed8' },
@@ -2611,12 +2611,12 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                 const { writeBatch, doc } = await import('firebase/firestore');
                 const batch = writeBatch(db);
                 
-                // Set/update the correct categories
+                
                 for (const ec of expectedCategories) {
                   batch.set(doc(db, 'categorias', ec.id), ec);
                 }
                 
-                // Delete extra categories (e.g. duplicate Cementerios or cat5)
+                
                 for (const extra of extraCategories) {
                   batch.delete(doc(db, 'categorias', extra.id));
                 }
@@ -2629,7 +2629,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
             }
           }
 
-          // Deduplicate categories by normalized name to guarantee single instances
+          
           const uniqueCategories = (categoriesData || []).reduce<Categoria[]>((acc, current) => {
             const normName = current.nombre.trim().toLowerCase();
             if (current.id === 'cat5' || normName.includes('evento')) return acc;
@@ -2646,16 +2646,16 @@ const DashboardView = ({ user }: { user: Usuario }) => {
               const sanitized = (lugaresData || []).map(l => {
                 let lng = l.lng;
                 if (typeof lng === 'number' && lng > 0) {
-                  lng = -lng; // Correct positive longitude to negative
+                  lng = -lng; 
                 } else if (typeof lng === 'string') {
                   const numLng = parseFloat(lng);
                   if (!isNaN(numLng)) {
                     lng = numLng > 0 ? -numLng : numLng;
                   } else {
-                    lng = -74.3638; // Default fallback
+                    lng = -74.3638; 
                   }
                 } else if (lng === undefined || lng === null) {
-                  lng = -74.3638; // Default fallback
+                  lng = -74.3638; 
                 }
 
                 let lat = l.lat;
@@ -2664,10 +2664,10 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                   if (!isNaN(numLat)) {
                     lat = numLat;
                   } else {
-                    lat = 4.3361; // Default fallback
+                    lat = 4.3361; 
                   }
                 } else if (lat === undefined || lat === null) {
-                  lat = 4.3361; // Default fallback
+                  lat = 4.3361; 
                 }
 
                 return {
@@ -2708,13 +2708,13 @@ const DashboardView = ({ user }: { user: Usuario }) => {
 
   return (
     <div className={`flex flex-col h-[100dvh] max-w-lg mx-auto relative overflow-hidden pb-20 transition-all duration-300 border-x-[3px] border-black shadow-2xl ${darkMode ? 'bg-[#181524] text-white halftone-bg-dark' : 'bg-white text-slate-800 halftone-bg'}`}>
-      {/* Header bar from screenshot with pastel dark compatibility */}
+    
       <header className={`sticky top-0 z-50 flex items-center justify-between px-4 py-3 transition-all duration-300 border-b-[4px] border-black ${darkMode ? 'bg-[#581c87]' : 'bg-[#8a2be2]'}`}>
         <div className="flex items-center gap-2">
           <span className="text-3xl font-comic italic tracking-wider text-white" style={{ textShadow: '2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000' }}>FUSA EXPLOR</span>
         </div>
         <div className="flex items-center gap-2">
-          {/* Theme switcher */}
+          
           <button 
             onClick={() => setDarkMode(!darkMode)}
             className="w-10 h-10 rounded-full border-[3px] border-black bg-purple-300 flex items-center justify-center shadow-[2px_2px_0_rgba(0,0,0,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all"
@@ -2746,7 +2746,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
       <main ref={mainContainerRef} className="flex-1 overflow-y-auto no-scrollbar pb-10">
         {currentView === 'inicio' && (
           <div className="p-4">
-            {/* Dynamic Pop-up Ad */}
+      
             <AnimatePresence>
               {showAdPopup && (
                 <motion.div 
@@ -2764,14 +2764,14 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                     className="relative bg-white border-[4px] border-black p-4 rounded-3xl max-w-xs w-full shadow-[8px_8px_0_rgba(0,0,0,1)] flex flex-col gap-3 overflow-hidden select-none halftone-bg"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {/* Comic Header badge inside */}
+                  
                     <div className="absolute top-2 left-4 z-20 transform -rotate-3">
                       <span className="bg-[#a855f7] border-[2px] border-black text-white px-3 py-1 font-comic text-xs tracking-wider shadow-[2px_2px_0_#000] block">
                         ANUNCIO
                       </span>
                     </div>
  
-                    {/* Close 'X' Button in Comic Style */}
+              
                     <button 
                       onClick={() => setShowAdPopup(false)}
                       className="absolute top-2 right-2 z-30 w-8 h-8 rounded-full bg-yellow-400 hover:bg-yellow-300 border-[2px] border-black flex items-center justify-center shadow-[2px_2px_0_rgba(0,0,0,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all cursor-pointer"
@@ -2780,7 +2780,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                       <X size={16} strokeWidth={3} className="text-black" />
                     </button>
  
-                    {/* Ad Image Container with Comic Frame */}
+                  
                     <div 
                       onClick={handleAdClick}
                       className="border-[3px] border-black rounded-2xl overflow-hidden shadow-[3px_3px_0_rgba(0,0,0,0.15)] bg-slate-100 aspect-[3/4] relative cursor-pointer group"
@@ -2797,7 +2797,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                       </div>
                     </div>
  
-                    {/* Footer text or CTA */}
+                  
                     <div className="text-center mt-1">
                       <button 
                         onClick={handleAdClick}
@@ -2811,10 +2811,10 @@ const DashboardView = ({ user }: { user: Usuario }) => {
               )}
             </AnimatePresence>
 
-            {/* Comic Grid: Destacados */}
+       
             <div className="flex flex-col gap-4">
               
-              {/* Title Section */}
+        
               <div className="flex items-center gap-3">
                 <span className="bg-[#a855f7] text-white border-[3px] border-black px-4 py-1 font-comic text-xl tracking-wider shadow-[3px_3px_0_#000] rotate-[-1deg]">
                   DESTACADOS
@@ -2822,7 +2822,7 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                 <div className="flex-1 h-[4px] bg-black"></div>
               </div>
               
-              {/* Full Width: Destacados */}
+       
               <div 
                 className="relative border-[4px] border-black shadow-[6px_6px_0_rgba(0,0,0,1)] bg-white h-48 cursor-pointer group select-none overflow-hidden rounded-2xl"
                 onClick={() => {
@@ -2839,10 +2839,10 @@ const DashboardView = ({ user }: { user: Usuario }) => {
                   const listToSlide = destacados.length > 0 ? destacados : lugares;
                   if (listToSlide.length > 1 && Math.abs(diffX) > 40) {
                     if (diffX > 0) {
-                      // Swipe left -> go next
+                   
                       setCurrentSlide(prev => (prev + 1) % listToSlide.length);
                     } else {
-                      // Swipe right -> go prev
+              
                       setCurrentSlide(prev => (prev - 1 + listToSlide.length) % listToSlide.length);
                     }
                   }

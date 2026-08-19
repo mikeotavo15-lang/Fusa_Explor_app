@@ -375,7 +375,7 @@ const BrandLogo = ({ animated = false, size = "md", yellow = false }: { animated
 
 
 export const DashboardSkeleton = () => (
-  <div className="flex flex-col h-[100dvh] pt-8 px-6 max-w-lg mx-auto relative overflow-hidden bg-gradient-to-br from-[#2a0e4a] via-[#5b21b6] to-[#a78bfa]">
+  <div className="flex flex-col h-[100dvh] pt-8 px-6 max-w-lg mx-auto relative overflow-hidden backdrop-blur-md bg-[#3b1154]/40">
     <div className="flex items-center justify-between mb-6 shrink-0 animate-pulse">
         <div>
           <div className="w-24 h-4 bg-[#ebd5ff]/30 rounded mb-2"></div>
@@ -454,7 +454,7 @@ const CommentsSection = ({ lugarId, user, darkMode }: { lugarId: string, user: U
 
   return (
     <div className={`mt-8 border-t pt-8 transition-colors ${darkMode ? 'border-pink-500/10' : 'border-slate-100'}`}>
-      <h3 className={`text-xl font-bold mb-6 flex items-center gap-2 transition-colors ${
+      <h3 className={`text-xl font-comic-bold mb-6 flex items-center gap-2 transition-colors ${
         darkMode ? 'text-pink-200' : 'text-slate-800'
       }`}>
         <MessageSquare className={darkMode ? 'text-pink-400' : 'text-primary'} size={24} />
@@ -935,12 +935,12 @@ const InAppBrowser = ({
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  // Compute map center coordinate reference
+  
   const targetCenter = mapCenter 
     ? mapCenter 
     : (showRoute && (currentDeviceLoc || userLocation) ? null : { lat, lng });
 
-  // Compute live Google Maps iframe URL with travel mode, zoom, view types, and search queries
+  
   let embedUrl = "";
   const actualUserLoc = currentDeviceLoc || userLocation;
   if (showRoute && actualUserLoc && !mapCenter) {
@@ -1142,7 +1142,7 @@ const InAppBrowser = ({
               }`}>
                 <Navigation size={40} className="animate-bounce" />
               </div>
-              <h4 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-slate-800'}`}>Redireccionando a Google Maps</h4>
+              <h4 className={`text-xl font-comic-bold mb-2 ${darkMode ? 'text-white' : 'text-slate-800'}`}>Redireccionando a Google Maps</h4>
               <p className={`text-sm mb-8 ${darkMode ? 'text-purple-200/60' : 'text-slate-500'}`}>Estamos abriendo la aplicación externa para una mejor experiencia de navegación.</p>
               <button 
                 type="button"
@@ -1842,7 +1842,7 @@ const ProfileView = ({
       </div>
 
       <div>
-        <h3 className={`text-xs font-black uppercase tracking-widest mb-4 ml-4 ${
+        <h3 className={`text-xs font-comic-bold uppercase tracking-widest mb-4 ml-4 ${
           darkMode ? 'text-pink-300/80' : 'text-slate-500/80'
         }`}>
           Historial de Reseñas / Visitas
@@ -3033,7 +3033,7 @@ useEffect(() => {
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute inset-0 halftone-bg opacity-10 mix-blend-multiply pointer-events-none"></div>
-                      <div className="absolute bottom-2 right-2 bg-yellow-400 text-black border-2 border-black font-black text-[10px] px-2.5 py-1 rounded-lg uppercase shadow-[2px_2px_0_#000] tracking-wider font-comic">
+                      <div className="absolute bottom-2 right-2 bg-yellow-400 text-black border-2 border-black text-[10px] px-2.5 py-1 rounded-lg uppercase shadow-[2px_2px_0_#000] tracking-wider font-comic">
                         Tocar para ver ➔
                       </div>
                     </div>
@@ -3042,8 +3042,8 @@ useEffect(() => {
                     <div className="text-center mt-1">
                       <button 
                         onClick={handleAdClick}
-                        className="w-full bg-[#c084fc] hover:bg-[#d8b4fe] border-[3px] border-black py-2.5 rounded-xl text-black font-black text-sm uppercase shadow-[3px_3px_0_#000] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all cursor-pointer font-comic tracking-widest flex items-center justify-center gap-2"
-                      >
+                        className="w-full bg-[#c084fc] hover:bg-[#d8b4fe] border-[3px] border-black py-2.5 rounded-xl text-black text-sm uppercase shadow-[3px_3px_0_#000] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all cursor-pointer font-comic tracking-widest flex items-center justify-center gap-2 comic-pow-effect"
+                        >
                         <span>¡IR AL LUGAR!</span>
                       </button>
                     </div>
@@ -3226,8 +3226,8 @@ useEffect(() => {
                 <h2 className="text-4xl font-comic text-black dark:text-white drop-shadow-[2px_2px_0_#fff]">ESTADOS</h2>
                 <button
                   onClick={() => setShowCreateStoryModal(true)}
-                  className="border-[3px] border-black bg-emerald-400 hover:bg-emerald-500 text-black px-3 py-1.5 rounded-full font-comic text-xs shadow-[2px_2px_0_#000] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all flex items-center gap-1 font-extrabold cursor-pointer"
-                >
+                 className="border-[3px] border-black bg-emerald-400 hover:bg-emerald-500 text-black px-3 py-1.5 rounded-full font-comic text-xs shadow-[2px_2px_0_#000] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all flex items-center gap-1 cursor-pointer"
+                 >
                   <Plus size={16} strokeWidth={3} />
                   <span>Añadir</span>
                 </button>
@@ -3256,8 +3256,8 @@ useEffect(() => {
                         </div>
                      </div>
                      <div className="relative z-10 text-left">
-                       <span className="font-comic font-black text-xs text-black dark:text-white drop-shadow-sm block">Añadir estado</span>
-                     </div>
+                      <span className="font-comic text-xs text-black dark:text-white drop-shadow-sm block">Añadir estado</span>
+                      </div>
                      <div className="absolute inset-0 halftone-bg opacity-15 mix-blend-multiply pointer-events-none"></div>
                    </div>
                  ) : (
@@ -3334,7 +3334,7 @@ useEffect(() => {
                      </div>
 
                      <div className="absolute bottom-2.5 left-2.5 right-2.5 z-10">
-                        <span className="bg-black/80 text-white border-[2px] border-white px-2 py-0.5 font-comic font-black text-xs shadow-[2px_2px_0_#000] truncate block max-w-full">
+                        <span className="bg-black/80 text-white border-[2px] border-white px-2 py-0.5 font-comic text-xs shadow-[2px_2px_0_#000] truncate block max-w-full">
                            Mi Estado
                         </span>
                      </div>
@@ -3409,8 +3409,8 @@ useEffect(() => {
                        </div>
 
                        <div className="absolute bottom-2.5 left-2.5 right-2.5 z-10">
-                          <span className="bg-black/80 text-white border-[2px] border-white px-2 py-0.5 font-comic font-black text-xs shadow-[2px_2px_0_#000] truncate block max-w-full">
-                             {group.usuarioNombre}
+                          <span className="bg-black/80 text-white border-[2px] border-white px-2 py-0.5 font-comic text-xs shadow-[2px_2px_0_#000] truncate block max-w-full">
+                            {group.usuarioNombre}
                           </span>
                        </div>
                      </div>
@@ -3483,7 +3483,7 @@ useEffect(() => {
             {selectedCategory && (
               <div ref={resultsRef} className={`mt-10 pt-4 border-t transition-colors ${darkMode ? 'border-pink-500/10' : 'border-slate-100'}`}>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                  <h3 className={`text-xl font-comic-bold uppercase tracking-wide ${darkMode ? 'text-white' : 'text-slate-800'}`}>
                     {categorias.find(c => c.id === selectedCategory)?.nombre}
                   </h3>
                   <button onClick={() => {
@@ -3791,7 +3791,7 @@ useEffect(() => {
 
            {NEARBY_ZONES[activeWeatherCity] && (
               <div className="space-y-3">
-                <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
+                <h3 className={`text-base font-comic-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {NEARBY_ZONES[activeWeatherCity].map((zone) => {
                     const zoneWeather = nearbyZonesWeather[zone.name];
@@ -3836,7 +3836,7 @@ useEffect(() => {
             </div>
 
             <div className="space-y-3">
-              <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Pronóstico Semanal</h3>
+              <h3 className={`text-base font-comic-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Pronóstico Semanal</h3>
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-3">
                 {weatherData?.forecast.map((f, i) => (
                   <div 
@@ -3890,7 +3890,7 @@ useEffect(() => {
                <p className={`${darkMode ? 'text-purple-200/60' : 'text-slate-500'} text-sm`}>{user.correo}</p>
             </div>
             
-            <h2 className={`text-lg font-bold mb-2 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Ajustes</h2>
+            <h2 className={`text-lg font-comic-bold mb-2 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Ajustes</h2>
             
             {/* Mi Perfil */}
             <button 
@@ -4052,7 +4052,7 @@ useEffect(() => {
       <div className="absolute bottom-24 right-5 z-40 flex flex-col items-end gap-3">
         <button 
           onClick={() => setShowAssistant(!showAssistant)}
-          className={`w-14 h-14 rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-all ${
+          className={`w-14 h-14 rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-all ${!showAssistant ? 'comic-pow-effect' : ''} ${
             showAssistant 
               ? 'bg-rose-500 text-white hover:bg-rose-600' 
               : (darkMode 

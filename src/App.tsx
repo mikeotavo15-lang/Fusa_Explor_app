@@ -5473,11 +5473,11 @@ const ComicAlertModal = ({
         {/* Comic Header */}
         <div className={`${headerBg} ${headerTextColor} border-b-[5px] border-black px-6 py-4 flex items-center justify-between relative z-10`}>
           <div className="flex items-center gap-2">
-            <span className="font-comic text-xl sm:text-2xl font-black tracking-wider uppercase drop-shadow-[2px_2px_0_#000]">
+            <span className="font-comic text-xl sm:text-2xl tracking-wider uppercase drop-shadow-[2px_2px_0_#000]">
               {title || defaultTitle}
             </span>
           </div>
-          <span className="bg-black text-white font-comic text-xs font-black px-3 py-1 rounded-full border-2 border-white rotate-[3deg] shadow-[2px_2px_0_rgba(255,255,255,0.5)] uppercase tracking-wider shrink-0">
+          <span className="bg-black text-white font-comic text-xs px-3 py-1 rounded-full border-2 border-white rotate-[3deg] shadow-[2px_2px_0_rgba(255,255,255,0.5)] uppercase tracking-wider shrink-0">
             {soundBadge}
           </span>
         </div>
@@ -5494,7 +5494,7 @@ const ComicAlertModal = ({
           {/* If Motivo is specified, highlight in a comic callout box */}
           {motivoText && (
             <div className="w-full bg-red-100 border-[3px] border-black rounded-2xl p-3.5 shadow-[4px_4px_0_#000] text-left flex flex-col gap-1">
-              <span className="font-comic text-xs text-red-600 font-black uppercase tracking-wider flex items-center gap-1">
+              <span className="font-comic text-xs text-red-600 uppercase tracking-wider flex items-center gap-1">
                 📌 MOTIVO DE LA RESTRICCIÓN:
               </span>
               <p className="text-xs sm:text-sm font-bold text-red-950 leading-snug">
@@ -5506,10 +5506,10 @@ const ComicAlertModal = ({
           {/* If Categoría is specified, highlight with comic badge */}
           {categoriaText && (
             <div className="w-full flex items-center justify-between bg-yellow-200 border-[3px] border-black rounded-xl px-4 py-2 shadow-[3px_3px_0_#000]">
-              <span className="font-comic text-xs font-black uppercase text-black">
+              <span className="font-comic text-xs uppercase text-black">
                 🏷️ CATEGORÍA:
               </span>
-              <span className="bg-black text-yellow-300 font-comic text-xs font-black uppercase px-3 py-1 rounded-lg border-2 border-black tracking-widest shadow-[1px_1px_0_#000]">
+              <span className="bg-black text-yellow-300 font-comic text-xs uppercase px-3 py-1 rounded-lg border-2 border-black tracking-widest shadow-[1px_1px_0_#000]">
                 {categoriaText}
               </span>
             </div>
@@ -5519,7 +5519,7 @@ const ComicAlertModal = ({
           <button
             onClick={onClose}
             type="button"
-            className="w-full mt-2 bg-[#8a2be2] hover:bg-[#9d3bf3] text-white border-[4px] border-black rounded-2xl py-3.5 px-6 font-comic text-2xl font-black uppercase tracking-widest shadow-[5px_5px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
+            className="w-full mt-2 bg-[#8a2be2] hover:bg-[#9d3bf3] text-white border-[4px] border-black rounded-2xl py-3.5 px-6 font-comic text-2xl uppercase tracking-widest shadow-[5px_5px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2 comic-pow-effect"
           >
             <span>¡ENTENDIDO!</span>
             <span className="text-yellow-300 text-3xl font-black">💥</span>

@@ -1202,7 +1202,7 @@ const NotARobotCaptcha = ({ onVerify }: { onVerify: (verified: boolean) => void 
   const handleToggle = () => {
     if (isVerified || isVerifying) return;
     setIsVerifying(true);
-    // Simular una verificación (puedes añadir lógica más compleja aquí)
+
     setTimeout(() => {
       setIsVerifying(false);
       setIsVerified(true);
@@ -1428,6 +1428,37 @@ const LoginView = () => {
               </h3>
               
               <div className="space-y-3">
+                   {isRegistering && (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="NOMBRE"
+                      value={nombreInput}
+                      onChange={(e) => setNombreInput(e.target.value)}
+                      required
+                      className="w-full bg-purple-50/50 border-[4px] border-black p-3.5 rounded-xl font-bold outline-none focus:bg-white focus:shadow-[4px_4px_0_#000] transition-all text-black placeholder-slate-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="APELLIDO"
+                      value={apellidoInput}
+                      onChange={(e) => setApellidoInput(e.target.value)}
+                      required
+                      className="w-full bg-purple-50/50 border-[4px] border-black p-3.5 rounded-xl font-bold outline-none focus:bg-white focus:shadow-[4px_4px_0_#000] transition-all text-black placeholder-slate-400"
+                    />
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1 ml-1">Fecha de nacimiento</label>
+                      <input
+                        type="date"
+                        value={fechaNacimientoInput}
+                        onChange={(e) => setFechaNacimientoInput(e.target.value)}
+                        required
+                        max={new Date().toISOString().split('T')[0]}
+                        className="w-full bg-purple-50/50 border-[4px] border-black p-3.5 rounded-xl font-bold outline-none focus:bg-white focus:shadow-[4px_4px_0_#000] transition-all text-black"
+                      />
+                    </div>
+                  </>
+                )}
                 <input 
                   type="email" 
                   placeholder="CORREO ELECTRÓNICO" 
@@ -1446,6 +1477,9 @@ const LoginView = () => {
                 />
               </div>
 
+              {isRegistering && (
+                  <NotARobotCaptcha onVerify={setCaptchaVerified} />
+                )}
               <button
                 type="submit"
                 className="w-full mt-4 bg-black text-white border-[4px] border-black py-4 rounded-2xl font-black uppercase tracking-widest shadow-[6px_6px_0_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all"

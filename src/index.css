@@ -40,6 +40,7 @@ body, input, select, textarea, button, span, p, div, a {
 h1, h2, h3, h4,
 button {
   font-family: var(--font-comic) !important;
+  letter-spacing: 0.04em;
 }
 
 @keyframes comic-pow {

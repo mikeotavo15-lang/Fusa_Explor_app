@@ -1258,6 +1258,9 @@ const LoginView = () => {
   const [loading, setLoading] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [nombreInput, setNombreInput] = useState('');
+  const [apellidoInput, setApellidoInput] = useState('');
+  const [fechaNacimientoInput, setFechaNacimientoInput] = useState('');
 
   const handleGoogleLogin = async () => {
     if (loading) return;
@@ -1292,6 +1295,22 @@ const LoginView = () => {
       return;
     }
 
+    if (isRegistering) {
+      if (!nombreInput.trim() || !apellidoInput.trim() || !fechaNacimientoInput) {
+        setError('Por favor completa nombre, apellido y fecha de nacimiento.');
+        return;
+      }
+      const nacimiento = new Date(fechaNacimientoInput);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const aunNoCumple = (hoy.getMonth() < nacimiento.getMonth()) ||
+        (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate());
+      if (aunNoCumple) edad--;
+      if (isNaN(edad) || edad < 13) {
+        setError('Debes tener al menos 13 años para registrarte.');
+        return;
+      }
+    }
     setLoading(true);
     try {
       if (isRegistering) {
@@ -1299,6 +1318,9 @@ const LoginView = () => {
         const isAdminEmail = email.endsWith('@fusaexplor.com') || email === 'riascosmarlon66@gmail.com' || email === 'mike.otavo15@gmail.com';
         await createUsuario(result.user.uid, {
           nombre: email.split('@')[0],
+          nombre: nombreInput.trim(),
+          apellido: apellidoInput.trim(),
+          fechaNacimiento: fechaNacimientoInput,
           correo: email,
           rol: isAdminEmail ? 'admin' : 'usuario'
         });

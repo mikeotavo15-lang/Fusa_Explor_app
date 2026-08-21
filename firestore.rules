@@ -109,7 +109,12 @@ service cloud.firestore {
 
     match /lugares/{lugarId} {
       allow read: if true;
-      allow create, update, delete: if true;
+      allow create: if (isAdmin() || isEmailAdmin(request.auth.token.email))
+                     && isValidLugar(incoming())
+                     && incoming().propietarioId == request.auth.uid;
+      allow update: if (isAdmin() || isEmailAdmin(request.auth.token.email))
+                     && isValidLugar(incoming());
+      allow delete: if isAdmin() || isEmailAdmin(request.auth.token.email);
     }
 
 
@@ -117,12 +122,17 @@ service cloud.firestore {
       allow read: if true;
     }
     match /lugares/{lugarId}/comentarios/{comentarioId} {
-      allow read, create, update, delete: if true;
+      allow read: if true;
+      allow create: if isSignedIn() && isValidComentario(incoming());
+      allow update: if isSignedIn() && existing().usuarioId == request.auth.uid && isValidComentario(incoming());
+      allow delete: if isSignedIn() && (existing().usuarioId == request.auth.uid || isAdmin());
     }
 
     match /historias/{storyId} {
       allow read: if true;
-      allow create, update, delete: if true;
+      allow create: if isSignedIn() && isValidHistoria(incoming());
+      allow update: if isSignedIn() && existing().usuarioId == request.auth.uid;
+      allow delete: if isSignedIn() && (existing().usuarioId == request.auth.uid || isAdmin());
     }
   }
 }

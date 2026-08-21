@@ -12,6 +12,7 @@
 html {
   height: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -33,6 +34,11 @@ body, input, select, textarea, button, span, p, div, a {
 font-comic-bold {
   font-family: var(--font-comic) !important;
   font-weight: 700 !important;
+}
+
+h1, h2, h3, h4,
+button {
+  font-family: var(--font-comic) !important;
 }
 
 @keyframes comic-pow {

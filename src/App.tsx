@@ -63,6 +63,7 @@ import {
   User as FirebaseUser,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile,
   signInWithPopup,
   GoogleAuthProvider,
   signInWithRedirect,
@@ -1315,6 +1316,7 @@ const LoginView = () => {
     try {
       if (isRegistering) {
         const result = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(result.user, { displayName: `${nombreInput.trim()} ${apellidoInput.trim()}`.trim() });
         const isAdminEmail = email.endsWith('@fusaexplor.com') || email === 'riascosmarlon66@gmail.com' || email === 'mike.otavo15@gmail.com';
         await createUsuario(result.user.uid, {
           nombre: email.split('@')[0],

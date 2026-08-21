@@ -32,8 +32,10 @@ service cloud.firestore {
     function isValidUsuario(data) {
       return data.nombre is string && data.nombre.size() > 0
           && data.correo is string && data.correo.size() > 0
-          && data.rol in ['usuario', 'admin'];
-    }
+          && data.rol in ['usuario', 'admin']
+          && (data.apellido is string || !('apellido' in data))
+          && (data.fechaNacimiento is string || !('fechaNacimiento' in data));
+     }
 
     function isValidCategoria(data) {
       return data.nombre is string && data.nombre.size() > 0 && data.nombre.size() <= 60
@@ -86,7 +88,7 @@ service cloud.firestore {
 
     match /usuarios/{userId} {
       allow read: if isSignedIn();
-      allow create: if isOwner(userId) && (
+      allow create: if isOwner(userId) && isValidUsuario(incoming()) && (
         (incoming().rol == 'usuario') || 
         (incoming().rol == 'admin' && (isEmailAdmin(incoming().correo) || isEmailAdmin(request.auth.token.email)))
       );

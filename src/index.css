@@ -21,6 +21,7 @@ body {
   overflow: hidden;
   overscroll-behavior: none;
   font-family: var(--font-sans);
+  -webkit-text-stroke: 0.35px currentColor;
 }
 
 body, input, select, textarea, button, span, p, div, a {
@@ -31,7 +32,7 @@ body, input, select, textarea, button, span, p, div, a {
   font-family: var(--font-comic) !important;
   font-weight: 400 !important;
 }
-font-comic-bold {
+.font-comic-bold {
   font-family: var(--font-comic) !important;
   font-weight: 700 !important;
 }
@@ -51,15 +52,15 @@ button {
 }
 
 .halftone-bg {
-  background-image: radial-gradient(circle, rgba(0,0,0,0.1) 20%, transparent 20%), radial-gradient(circle, rgba(0,0,0,0.1) 20%, transparent 20%);
-  background-size: 10px 10px;
-  background-position: 0 0, 5px 5px;
+ background-image: radial-gradient(circle, rgba(0,0,0,0.16) 22%, transparent 22%), radial-gradient(circle, rgba(0,0,0,0.16) 22%, transparent 22%);
+ background-size: 11px 11px;
+ background-position: 0 0, 5.5px 5.5px;
 }
 
 .halftone-bg-dark {
-  background-image: radial-gradient(circle, rgba(244,63,94,0.15) 20%, transparent 20%), radial-gradient(circle, rgba(244,63,94,0.15) 20%, transparent 20%);
-  background-size: 10px 10px;
-  background-position: 0 0, 5px 5px;
+  background-image: radial-gradient(circle, rgba(244,63,94,0.22) 22%, transparent 22%), radial-gradient(circle, rgba(244,63,94,0.22) 22%, transparent 22%);
+  background-size: 11px 11px;
+  background-position: 0 0, 5.5px 5.5px;
 }
 
 .comic-border {

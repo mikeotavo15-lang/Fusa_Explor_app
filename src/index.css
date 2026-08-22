@@ -45,8 +45,8 @@ button {
   color: #fff !important;
   -webkit-text-stroke: 0.6px #000;
   text-shadow: 1px 1px 0 #000;
+  }
 }
-
 button {
   font-family: var(--font-comic) !important;
   letter-spacing: 0.04em;

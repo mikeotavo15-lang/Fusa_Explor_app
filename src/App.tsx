@@ -3480,7 +3480,7 @@ useEffect(() => {
         })()}
 
         {currentView === 'pahacer' && (
-          <div className="p-6 pb-28">
+          <div className="p-6 pb-28 pahacer-comic-neue">
             <div className="text-center mb-8">
               <h2 className={`text-2xl font-black uppercase tracking-tight ${darkMode ? 'text-white' : 'text-slate-800'}`}>
                 ¿Qué hay pa' hacer?
@@ -3490,7 +3490,6 @@ useEffect(() => {
               </p>
             </div>
 
-            {/* Circular Pattern Button Grid matching image.png styling */}
             {categorias.length === 0 ? (
               <div className={`rounded-[32px] border-4 border-dashed p-8 text-center ${darkMode ? 'bg-[#1b1630] border-pink-500/20 text-pink-200' : 'bg-white border-slate-200 text-slate-500'}`}>
                 <p className="font-bold uppercase tracking-widest mb-2">Aún cargando categorías</p>
@@ -3515,7 +3514,7 @@ useEffect(() => {
                       }`}
                       style={{ backgroundColor: cat.color || '#8b5cf6' }}
                     >
-                      {/* Glossy Liquid Sheen Reflection overlay */}
+               
                       <div className="absolute top-0 left-0 right-0 h-[45%] bg-gradient-to-b from-white/40 to-transparent pointer-events-none rounded-t-full" />
                       
                       {/* Inner Circular Shadow accent */}

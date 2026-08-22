@@ -9,19 +9,10 @@
   --color-secondary: #d8b4fe; 
   --color-accent: #f8f9fa; 
 }
-html {
-  height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
-}
 
 body {
   @apply bg-[#d8b4fe] text-slate-900 overflow-x-hidden font-bold;
-  height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
   font-family: var(--font-sans);
-  -webkit-text-stroke: 0.35px currentColor;
 }
 
 body, input, select, textarea, button, span, p, div, a {
@@ -30,37 +21,19 @@ body, input, select, textarea, button, span, p, div, a {
 
 .font-comic {
   font-family: var(--font-comic) !important;
-  font-weight: 400 !important;
-}
-.font-comic-bold {
-  font-family: var(--font-comic) !important;
-  font-weight: 700 !important;
-}
-
-button {
-  font-family: var(--font-comic) !important;
-  letter-spacing: 0.04em;
-}
-
-@keyframes comic-pow {
-  0%, 100% { transform: rotate(-2deg) scale(1); }
-  50% { transform: rotate(2deg) scale(1.06); }
-}
-
-.comic-pow-effect {
-  animation: comic-pow 1.8s ease-in-out infinite;
+  font-weight: 400 !important; /* Bangers display font looks best at native weight */
 }
 
 .halftone-bg {
- background-image: radial-gradient(circle, rgba(0,0,0,0.16) 20%, transparent 20%), radial-gradient(circle, rgba(0,0,0,0.16) 20%, transparent 22%);
- background-size: 11px 11px;
- background-position: 0 0, 5.5px 5.5px;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.1) 20%, transparent 20%), radial-gradient(circle, rgba(0,0,0,0.1) 20%, transparent 20%);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
 }
 
 .halftone-bg-dark {
-  background-image: radial-gradient(circle, rgba(244,63,94,0.22) 20%, transparent 20%), radial-gradient(circle, rgba(244,63,94,0.22) 20%, transparent 20%);
-  background-size: 11px 11px;
-  background-position: 0 0, 5.5px 5.5px;
+  background-image: radial-gradient(circle, rgba(244,63,94,0.15) 20%, transparent 20%), radial-gradient(circle, rgba(244,63,94,0.15) 20%, transparent 20%);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
 }
 
 .comic-border {

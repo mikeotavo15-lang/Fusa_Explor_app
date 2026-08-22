@@ -37,20 +37,19 @@ body, input, select, textarea, button, span, p, div, a {
   font-weight: 700 !important;
 }
 
-h1, h2, h3, h4,
-button {
-+h1, h2 {
-   font-family: var(--font-comic) !important;
-   letter-spacing: 0.04em;
+h1, h2 {
+  font-family: var(--font-comic) !important;
+  letter-spacing: 0.04em;
   color: #fff !important;
   -webkit-text-stroke: 0.6px #000;
   text-shadow: 1px 1px 0 #000;
-  }
 }
+
 button {
   font-family: var(--font-comic) !important;
   letter-spacing: 0.04em;
- }
+}
+
 @keyframes comic-pow {
   0%, 100% { transform: rotate(-2deg) scale(1); }
   50% { transform: rotate(2deg) scale(1.06); }

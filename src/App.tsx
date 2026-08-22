@@ -455,7 +455,7 @@ const CommentsSection = ({ lugarId, user, darkMode }: { lugarId: string, user: U
 
   return (
     <div className={`mt-8 border-t pt-8 transition-colors ${darkMode ? 'border-pink-500/10' : 'border-slate-100'}`}>
-      <h3 className={`text-xl font-comic-bold mb-6 flex items-center gap-2 transition-colors ${
+      <h3 className={`text-xl font-bold mb-6 flex items-center gap-2 transition-colors ${
         darkMode ? 'text-pink-200' : 'text-slate-800'
       }`}>
         <MessageSquare className={darkMode ? 'text-pink-400' : 'text-primary'} size={24} />
@@ -1143,7 +1143,7 @@ const InAppBrowser = ({
               }`}>
                 <Navigation size={40} className="animate-bounce" />
               </div>
-              <h4 className={`text-xl font-comic-bold mb-2 ${darkMode ? 'text-white' : 'text-slate-800'}`}>Redireccionando a Google Maps</h4>
+              <h4 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-slate-800'}`}>Redireccionando a Google Maps</h4>
               <p className={`text-sm mb-8 ${darkMode ? 'text-purple-200/60' : 'text-slate-500'}`}>Estamos abriendo la aplicación externa para una mejor experiencia de navegación.</p>
               <button 
                 type="button"
@@ -1900,7 +1900,7 @@ const ProfileView = ({
       </div>
 
       <div>
-        <h3 className={`text-xs font-comic-bold uppercase tracking-widest mb-4 ml-4 ${
+        <h3 className={`text-xs font-bold uppercase tracking-widest mb-4 ml-4 ${
           darkMode ? 'text-pink-300/80' : 'text-slate-500/80'
         }`}>
           Historial de Reseñas / Visitas
@@ -3541,7 +3541,7 @@ useEffect(() => {
             {selectedCategory && (
               <div ref={resultsRef} className={`mt-10 pt-4 border-t transition-colors ${darkMode ? 'border-pink-500/10' : 'border-slate-100'}`}>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className={`text-xl font-comic-bold uppercase tracking-wide ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                  <h3 className={`text-xl font-bold uppercase tracking-wide ${darkMode ? 'text-white' : 'text-slate-800'}`}>
                     {categorias.find(c => c.id === selectedCategory)?.nombre}
                   </h3>
                   <button onClick={() => {
@@ -3849,7 +3849,7 @@ useEffect(() => {
 
            {NEARBY_ZONES[activeWeatherCity] && (
               <div className="space-y-3">
-                <h3 className={`text-base font-comic-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
+                <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Comparativa de Zonas Comunes</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {NEARBY_ZONES[activeWeatherCity].map((zone) => {
                     const zoneWeather = nearbyZonesWeather[zone.name];
@@ -3894,7 +3894,7 @@ useEffect(() => {
             </div>
 
             <div className="space-y-3">
-              <h3 className={`text-base font-comic-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Pronóstico Semanal</h3>
+              <h3 className={`text-base font-bold px-1 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Pronóstico Semanal</h3>
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-3">
                 {weatherData?.forecast.map((f, i) => (
                   <div 
@@ -3948,9 +3948,9 @@ useEffect(() => {
                <p className={`${darkMode ? 'text-purple-200/60' : 'text-slate-500'} text-sm`}>{user.correo}</p>
             </div>
             
-            <h2 className={`text-lg font-comic-bold mb-2 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Ajustes</h2>
+            <h2 className={`text-lg font-bold mb-2 ${darkMode ? 'text-pink-200' : 'text-slate-800'}`}>Ajustes</h2>
             
-            {/* Mi Perfil */}
+          
             <button 
               onClick={() => setCurrentView('perfil')}
               className={`w-full p-4 rounded-2xl flex items-center justify-between border transition-all ${
@@ -3964,7 +3964,7 @@ useEffect(() => {
                <ChevronRight size={20} className={darkMode ? "text-pink-300" : "text-slate-300"} />
             </button>
 
-            {/* Lugares Guardados */}
+           
             <button 
               onClick={() => setCurrentView('guardados')}
               className={`w-full p-4 rounded-2xl flex items-center justify-between border transition-all ${
@@ -3978,7 +3978,6 @@ useEffect(() => {
                <ChevronRight size={20} className={darkMode ? "text-pink-300" : "text-slate-300"} />
             </button>
 
-            {/* Mis Favoritos */}
             <button 
               onClick={() => setCurrentView('favoritos')}
               className={`w-full p-4 rounded-2xl flex items-center justify-between border transition-all ${
@@ -4020,8 +4019,6 @@ useEffect(() => {
         )}
       </main>
 
-      {/* Footer bar - completely transparent container with pointer-events-none to let clicks pass through */}
-      {/* Footer bar - equal measure buttons */}
       <nav className={`absolute bottom-3 left-3 right-3 z-40 px-2 py-1.5 flex items-center justify-between gap-1 rounded-[28px] border backdrop-blur-xl shadow-2xl transition-all duration-300 pointer-events-none ${
         darkMode 
           ? 'bg-[#181524]/90 border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.6)]' 
@@ -4034,7 +4031,7 @@ useEffect(() => {
         <NavButton label="Menu" icon={MoreHorizontal} active={currentView === 'menu'} onClick={() => setCurrentView('menu')} darkMode={darkMode} />
       </nav>
 
-      {/* Place Detail Overlay */}
+
       <AnimatePresence>
         {selectedLugar && (
           <PlaceDetail 
@@ -4067,8 +4064,7 @@ useEffect(() => {
         )}
       </AnimatePresence>
 
-      {/* In-App Navigation Browser */}
-      <AnimatePresence>
+          <AnimatePresence>
         {navigatingLugar && (
           <InAppBrowser 
             lugar={navigatingLugar} 
@@ -4080,8 +4076,6 @@ useEffect(() => {
       </AnimatePresence>
 
 
-
-      {/* Modal for admin adds */}
       <AnimatePresence>
         {showLugarModal && (
           <div className="fixed inset-0 z-[110] flex items-end sm:items-center justify-center">
@@ -4106,7 +4100,6 @@ useEffect(() => {
         )}
       </AnimatePresence>
 
-      {/* Botón Flotante de Fusa Guía */}
       <div className="absolute bottom-24 right-5 z-40 flex flex-col items-end gap-3">
         <button 
           onClick={() => setShowAssistant(!showAssistant)}
@@ -4133,7 +4126,6 @@ useEffect(() => {
         </button>
       </div>
 
-      {/* Panel de Chat de Fusa Guía Local */}
       <AnimatePresence>
         {showAssistant && (
           <motion.div
@@ -4145,7 +4137,7 @@ useEffect(() => {
               darkMode ? 'bg-[#1c182d] border-pink-500/15' : 'bg-white border-slate-150'
             }`}
           >
-            {/* Header del Chat */}
+       
             <div className={`p-4 flex items-center justify-between transition-colors ${
               darkMode ? 'bg-[#221c32] text-pink-200 border-b border-pink-500/10' : 'bg-primary text-white'
             }`}>
@@ -4170,7 +4162,6 @@ useEffect(() => {
               </button>
             </div>
 
-            {/* Mensajes del Chat */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
               {chatMessages.map((msg, index) => (
                 <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -4205,7 +4196,7 @@ useEffect(() => {
               <div ref={chatEndRef} />
             </div>
 
-            {/* Preguntas Sugeridas */}
+     
             {chatMessages.length === 1 && !chatLoading && (
               <div className="px-4 pb-2 pt-1 flex gap-2 overflow-x-auto no-scrollbar">
                 {[
@@ -4236,7 +4227,7 @@ useEffect(() => {
               </div>
             )}
 
-            {/* Formulario de Entrada */}
+          
             <form 
               onSubmit={(e) => { e.preventDefault(); handleSendChatMessage(); }}
               className={`p-3 border-t flex gap-2 items-center transition-colors ${
@@ -4273,7 +4264,7 @@ useEffect(() => {
         )}
       </AnimatePresence>
 
-      {/* Create Story Modal */}
+
       <AnimatePresence>
         {showCreateStoryModal && (
           <div className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center">

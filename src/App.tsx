@@ -3005,7 +3005,7 @@ useEffect(() => {
   if (loading) return <DashboardSkeleton />;
 
   return (
-    <div className={`flex flex-col h-[100dvh] max-w-lg mx-auto relative overflow-hidden pb-20 transition-all duration-300 border-x-[3px] border-black shadow-2xl ${darkMode ? 'bg-[#181524] text-white halftone-bg-dark' : 'bg-white text-slate-800 halftone-bg'}`}>
+    <div className={`flex flex-col fixed inset-0 max-w-lg mx-auto overflow-hidden pb-20 transition-all duration-300 border-x-[3px] border-black shadow-2xl ${darkMode ? 'bg-[#181524] text-white halftone-bg-dark' : 'bg-white text-slate-800 halftone-bg'}`}>
     
       <header className={`sticky top-0 z-50 flex items-center justify-between px-4 py-3 transition-all duration-300 border-b-[4px] border-black ${darkMode ? 'bg-[#581c87]' : 'bg-[#8a2be2]'}`}>
         <div className="flex items-center gap-2">
@@ -3041,7 +3041,7 @@ useEffect(() => {
         </div>
       </header>
 
-      <main ref={mainContainerRef} className="flex-1 overflow-y-auto no-scrollbar pb-10 overscroll-y-contain">
+      <main ref={mainContainerRef} className="flex-1 min-h-0 overflow-y-auto no-scrollbar pb-10 overscroll-y-contain">
         {currentView === 'inicio' && (
           <div className="p-4">
       

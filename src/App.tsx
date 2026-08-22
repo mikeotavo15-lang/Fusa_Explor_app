@@ -403,7 +403,7 @@ export const DashboardSkeleton = () => (
 );
 
 const LoadingOrchid = () => (
-  <div className="flex flex-col items-center justify-center p-12 bg-[#ebd5ff]/30 backdrop-blur-xl rounded-[48px] shadow-2xl border border-[#ebd5ff]/50">
+  <div className="flex flex-col items-center justify-center p-12 bg-[#3b1154]/70 backdrop-blur-md rounded-[48px] shadow-2xl border-2 border-[#a78bfa]/40">
     <BrandLogo animated={true} size="lg" yellow={true} />
     <p className="text-white/80 font-black text-[10px] uppercase tracking-[0.4em] italic mt-8 animate-pulse text-center">
       Cargando...
@@ -3497,7 +3497,7 @@ useEffect(() => {
                 <p className="text-xs leading-relaxed">Espera un momento o recarga la página para que las categorías aparezcan correctamente.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 justify-items-center">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-10 justify-items-center">
                 {categorias.map(cat => {
                   const Icon = getCategoryIcon(cat);
                   const isSelected = selectedCategory === cat.id;
@@ -3527,7 +3527,7 @@ useEffect(() => {
                     </div>
 
                     {/* Bold dynamic category label */}
-                    <span className={`text-[11px] font-black uppercase tracking-wide mt-3 text-center max-w-[85px] leading-tight transition-colors ${
+                    <span className={`text-[13px] font-black uppercase tracking-wide mt-3 text-center max-w-[92px] leading-tight transition-colors ${
                       darkMode ? 'text-pink-100 group-hover:text-pink-400' : 'text-slate-800 group-hover:text-primary'
                     }`}>
                       {cat.nombre}

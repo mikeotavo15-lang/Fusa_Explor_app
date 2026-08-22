@@ -1319,7 +1319,6 @@ const LoginView = () => {
         await updateProfile(result.user, { displayName: `${nombreInput.trim()} ${apellidoInput.trim()}`.trim() });
         const isAdminEmail = email.endsWith('@fusaexplor.com') || email === 'riascosmarlon66@gmail.com' || email === 'mike.otavo15@gmail.com';
         await createUsuario(result.user.uid, {
-          nombre: email.split('@')[0],
           nombre: nombreInput.trim(),
           apellido: apellidoInput.trim(),
           fechaNacimiento: fechaNacimientoInput,
@@ -5331,7 +5330,6 @@ const LugarForm = ({
           </div>
         )}
 
-        {/* Sección de Anuncio Promocional */}
         <div className="space-y-4 pt-4 border-t border-dashed border-slate-200 dark:border-pink-500/10">
           <div className={`flex items-center gap-3 p-4 rounded-2xl border ${
             darkMode ? 'bg-pink-950/20 border-pink-500/10 text-pink-300' : 'bg-yellow-50 border-yellow-100 text-yellow-700'
@@ -5428,7 +5426,6 @@ const NavButton = ({ icon: Icon, active, onClick, label, darkMode }: { icon: any
         : 'opacity-70 hover:opacity-100 hover:scale-102'
     }`}
   >
-    {/* Liquid Active Background Glass Pill with motion transition */}
     {active && (
       <motion.div 
         layoutId="liquidActivePill"
@@ -5515,10 +5512,9 @@ const ComicAlertModal = ({
         transition={{ type: "spring", stiffness: 380, damping: 22 }}
         className="relative w-full max-w-md bg-white border-[5px] border-black rounded-[32px] shadow-[12px_12px_0_#000] overflow-hidden"
       >
-        {/* Halftone Overlay */}
+        
         <div className="absolute inset-0 halftone-bg opacity-15 pointer-events-none z-0"></div>
 
-        {/* Comic Header */}
         <div className={`${headerBg} ${headerTextColor} border-b-[5px] border-black px-6 py-4 flex items-center justify-between relative z-10`}>
           <div className="flex items-center gap-2">
             <span className="font-comic text-xl sm:text-2xl tracking-wider uppercase drop-shadow-[2px_2px_0_#000]">
@@ -5530,16 +5526,16 @@ const ComicAlertModal = ({
           </span>
         </div>
 
-        {/* Comic Body */}
+        
         <div className="p-6 relative z-10 flex flex-col items-center gap-4 text-center">
-          {/* Main Message Speech Bubble */}
+         
           <div className="relative w-full bg-[#fffbeb] border-[4px] border-black rounded-2xl p-4 shadow-[5px_5px_0_#000] text-slate-900 font-extrabold text-sm sm:text-base leading-relaxed text-left">
             <p className="font-sans font-black text-base text-slate-900 whitespace-pre-line leading-snug">
               {mainText}
             </p>
           </div>
 
-          {/* If Motivo is specified, highlight in a comic callout box */}
+         
           {motivoText && (
             <div className="w-full bg-red-100 border-[3px] border-black rounded-2xl p-3.5 shadow-[4px_4px_0_#000] text-left flex flex-col gap-1">
               <span className="font-comic text-xs text-red-600 uppercase tracking-wider flex items-center gap-1">
@@ -5551,7 +5547,7 @@ const ComicAlertModal = ({
             </div>
           )}
 
-          {/* If Categoría is specified, highlight with comic badge */}
+          
           {categoriaText && (
             <div className="w-full flex items-center justify-between bg-yellow-200 border-[3px] border-black rounded-xl px-4 py-2 shadow-[3px_3px_0_#000]">
               <span className="font-comic text-xs uppercase text-black">
@@ -5563,7 +5559,7 @@ const ComicAlertModal = ({
             </div>
           )}
 
-          {/* Action Button */}
+      
           <button
             onClick={onClose}
             type="button"
@@ -5670,8 +5666,7 @@ export default function App() {
             rol: isAdminEmail ? 'admin' : 'usuario',
             avatar: user.photoURL || ''
           };
-          
-          // Subscribe in real-time to profile doc so changes display live!
+        
           const userDocRef = doc(db, 'usuarios', user.uid);
           unsubscribeProfile = onSnapshot(userDocRef, (snap) => {
             if (snap.exists()) {

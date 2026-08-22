@@ -1,6 +1,8 @@
 export interface Usuario {
   id: string;
   nombre: string;
+  apellido?: string;
+  fechaNacimiento?: string;
   correo: string;
   rol: 'usuario' | 'admin';
   avatar?: string;

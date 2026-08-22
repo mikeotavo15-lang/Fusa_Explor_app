@@ -10,9 +10,17 @@
   --color-accent: #f8f9fa; 
 }
 
+html {
+  height: 100%;
+  overflow: hidden;
+}
 body {
   @apply bg-[#d8b4fe] text-slate-900 overflow-x-hidden font-bold;
   font-family: var(--font-sans);
+  -webkit-text-stroke: 0.35px currentColor;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body, input, select, textarea, button, span, p, div, a {
@@ -21,7 +29,7 @@ body, input, select, textarea, button, span, p, div, a {
 
 .font-comic {
   font-family: var(--font-comic) !important;
-  font-weight: 400 !important; /* Bangers display font looks best at native weight */
+  font-weight: 400 !important; 
 }
 
 .halftone-bg {

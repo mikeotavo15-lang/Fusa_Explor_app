@@ -376,7 +376,7 @@ const BrandLogo = ({ animated = false, size = "md", yellow = false }: { animated
 
 
 export const DashboardSkeleton = () => (
-  <div className="flex flex-col h-[100dvh] pt-8 px-6 max-w-lg mx-auto relative overflow-hidden backdrop-blur-md bg-[#3b1154]/40">
+  <div className="flex flex-col h-[100dvh] pt-8 px-6 max-w-lg mx-auto relative overflow-hidden bg-gradient-to-br from-[#2a0e4a] via-[#5b21b6] to-[#a78bfa]">
     <div className="flex items-center justify-between mb-6 shrink-0 animate-pulse">
         <div>
           <div className="w-24 h-4 bg-[#ebd5ff]/30 rounded mb-2"></div>
@@ -1348,13 +1348,13 @@ const LoginView = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#2a0e4a] via-[#5b21b6] to-[#a78bfa] py-8">
-      {/* Glow Backdrops for Modern Attention-grabbing Effect */}
+    <div className="min-h-screen relative flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden bg-gradient-to-br from-[#2a0e4a] via-[#5b21b6] to-[#a78bfa] py-8">
+      
       <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-pink-500/15 blur-[120px] pointer-events-none z-0"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] rounded-full bg-violet-400/25 blur-[150px] pointer-events-none z-0"></div>
       <div className="absolute top-[35%] left-[20%] w-[50%] h-[50%] rounded-full bg-fuchsia-600/15 blur-[100px] pointer-events-none z-0"></div>
 
-      {/* Rotating Comic Action Sunburst Lines */}
+      
       <div className="absolute inset-0 pointer-events-none opacity-15 mix-blend-overlay z-0 flex items-center justify-center overflow-hidden">
         <svg className="w-[180%] h-[180%] animate-[spin_120s_linear_infinite]" viewBox="0 0 100 100">
           <g stroke="white" strokeWidth="0.8">
@@ -1382,13 +1382,13 @@ const LoginView = () => {
         </svg>
       </div>
 
-      {/* Comic Halftone Dot overlay specifically tuned for dark backgrounds */}
+      
       <div className="absolute inset-0 halftone-bg-dark pointer-events-none z-0"></div>
 
-      {/* Foreground Content */}
+      
       <div className="relative z-20 w-full max-w-md px-6 flex flex-col items-center">
         
-        {/* Beautiful Comic-styled Brand Logo */}
+        
         <div className="mb-8 relative flex justify-center w-full">
            <div className="absolute w-52 h-52 bg-pink-500/30 rounded-full blur-[50px] opacity-60"></div>
            <BrandLogo animated={true} size="lg" yellow={true} />
@@ -1402,7 +1402,7 @@ const LoginView = () => {
 
         {!showEmailForm ? (
           <div className="w-full space-y-5">
-            {/* Google Button in comic style */}
+            
             <div 
               className="relative group cursor-pointer w-full" 
               onClick={handleGoogleLogin}
@@ -1413,7 +1413,7 @@ const LoginView = () => {
               </div>
             </div>
             
-            {/* Email Option */}
+           
             <button 
               onClick={() => setShowEmailForm(true)}
               className="mt-6 flex items-center justify-center gap-2.5 w-full bg-white border-[4px] border-black py-3 rounded-2xl font-black uppercase text-xs shadow-[4px_4px_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none hover:bg-purple-100 transition-all text-black cursor-pointer tracking-widest font-comic"
@@ -1484,7 +1484,7 @@ const LoginView = () => {
                 )}
               <button
                 type="submit"
-                className="w-full mt-4 bg-black text-white border-[4px] border-black py-4 rounded-2xl font-black uppercase tracking-widest shadow-[6px_6px_0_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all"
+                className="w-full mt-4 bg-[#8a2be2] hover:bg-[#7a1fd1] text-white border-[4px] border-black py-4 rounded-2xl font-black uppercase tracking-widest shadow-[6px_6px_0_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all"
               >
                 {isRegistering ? 'CREAR CUENTA' : 'INGRESAR CON CORREO'}
               </button>
@@ -3042,7 +3042,7 @@ useEffect(() => {
         </div>
       </header>
 
-      <main ref={mainContainerRef} className="flex-1 overflow-y-auto no-scrollbar pb-10">
+      <main ref={mainContainerRef} className="flex-1 overflow-y-auto no-scrollbar pb-10 overscroll-y-contain">
         {currentView === 'inicio' && (
           <div className="p-4">
       
